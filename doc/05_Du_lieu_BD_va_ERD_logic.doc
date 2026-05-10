@@ -1,0 +1,81 @@
+DỮ LIỆU DB & ERD LOGIC (LOGIC THỰC THỂ)
+
+Lưu ý: Tài liệu này mô tả “logic quan hệ” theo các models trong repo, phục vụ phát hành/triển khai. Khi release production, bạn nên tạo ERD trực quan từ SQLAlchemy models (hoặc dùng tool generate ERD) nếu cần.
+
+1) Nhóm thực thể chính
+1.1 Người dùng & an ninh
+- NguoiDung (users)
+  - email, mật khẩu hash, vai trò (admin/client), trạng thái hoạt động
+- Địa chỉ (addresses)
+  - lưu nhiều địa chỉ cho user, có địa chỉ mặc định
+
+1.2 Sản phẩm
+- Danh mục (category)
+- Sản phẩm (product)
+  - ảnh (base64 theo mô tả), size/options, giá, trạng thái
+
+1.3 Giỏ hàng & Wishlist
+- Cart
+  - items thuộc về user, số lượng, size option
+- Wishlist
+  - danh sách sản phẩm yêu thích theo user
+
+1.4 Đơn hàng & thanh toán
+- Order
+  - chứa thông tin khách, địa chỉ nhận, tổng tiền, trạng thái giao vận
+- PaymentMethod (phương thức thanh toán)
+  - cod/bank/momo/zalopay và cấu hình phí/hỗ trợ qr
+- Payment
+  - kết quả thanh toán gắn với order
+
+1.5 Coupon & khuyến mãi
+- Coupon
+  - code, giảm %/giảm tiền, điều kiện hiệu lực
+
+1.6 Reviews
+- Review
+  - đánh giá theo product + user, kèm sao/bình luận
+
+1.7 Logs
+- Log
+  - ghi hành động (đặc biệt admin) phục vụ truy vết
+
+2) Các quan hệ logic (ERD dạng chữ)
+- User (NguoiDung)
+  - 1..N Address
+  - 1..N Cart items
+  - 1..N Wishlist items
+  - 1..N Orders
+  - 1..N Reviews
+
+- Category
+  - 1..N Products
+
+- Product
+  - 1..N Cart items (thông qua item reference)
+  - 1..N Wishlist entries
+  - 1..N Reviews
+
+- Order
+  - 1..N Payments (thực tế thường 1, nhưng thiết kế có thể cho phép nhiều trạng thái)
+  - liên quan Coupon (nếu order có áp dụng)
+
+- PaymentMethod
+  - 1..N Payments (thanh toán sử dụng phương thức nào)
+
+- Admin action
+  - ghi vào Logs
+
+3) Luồng dữ liệu quan trọng để kiểm tra khi release
+- Seed payment methods + admin default phải đúng schema.
+- Order creation phải ghi trạng thái ban đầu và tạo payment record phù hợp.
+- Updates order status (admin) phải ghi log.
+
+4) Kiểm tra dữ liệu sau deploy
+- /api/health OK
+- Admin đăng nhập được bằng admin@qlbg.com / admin123
+- Payment methods trả về đủ 4 phương thức.
+
+5) Rủi ro khi schema thay đổi
+- Nếu thay model mà vẫn deploy bằng create_all(), dữ liệu cũ có thể không tự migrate an toàn.
+- Với production nên dùng Alembic migration.

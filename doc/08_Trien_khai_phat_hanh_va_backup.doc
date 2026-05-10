@@ -1,0 +1,107 @@
+TRIỂN KHAI / PHÁT HÀNH / BACKUP
+
+1) Mục tiêu phát hành
+- Đưa hệ thống lên môi trường chạy ổn định:
+  - Frontend: production build
+  - Backend: chạy uvicorn/gunicorn
+  - Database: PostgreSQL
+- Đảm bảo có thể khôi phục dữ liệu sau sự cố.
+
+2) Chuẩn bị môi trường
+2.1 Backend
+- Tạo venv (Windows):
+  - python -m venv venv
+  - venv\Scripts\activate
+- Cài deps:
+  - pip install -r requirements.txt
+- Tạo file .env (trong backend theo settings config.py yêu cầu):
+  - DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME
+  - JWT_KEY, ALGORITHM, JWT_TOKEN_EXPIRE
+  - CORS_ORIGINS (vd: http://localhost:5173,http://yourdomain)
+  - MAX_IMAGE_SIZE_MB
+
+2.2 Frontend
+- npm install
+- npm run build
+
+3) Chạy hệ thống (dev/local)
+3.1 Backend
+- uvicorn app.main:app --reload
+- health check:
+  - GET http://localhost:8000/api/health
+
+3.2 Frontend
+- npm run dev
+- proxy /api đã cấu hình về http://localhost:8000
+
+4) Seed dữ liệu khi release
+- Khi backend startup:
+  - Payment methods được seed 4 record nếu bảng trống.
+  - Admin default được tạo nếu chưa tồn tại.
+
+5) Production deployment gợi ý
+5.1 Lựa chọn cách host
+- Option A: frontend tách domain (static hosting) + backend API domain.
+- Option B: serve static frontend từ backend (cần thêm cấu hình) hoặc reverse proxy.
+
+5.2 Cấu hình baseURL Axios
+- Update services/api.js để gọi đúng domain backend production.
+
+6) Build frontend production
+- Tại /frontend:
+  - npm run build
+- Output thư mục thường là dist/.
+
+7) Backup & restore (Backup data đầy đủ)
+Tài liệu dự án: data/BACKUP_INSTRUCTIONS.md
+
+Mục tiêu backup data:
+- Backup đúng cấu trúc + dữ liệu của PostgreSQL.
+- Có thể restore trong thời gian ngắn khi gặp sự cố.
+- Có thể backup dưới dạng SQL (pg_dump/pg_dumpall) hoặc export JSON (script).
+
+Khuyến nghị thực hành:
+- Backup trước khi deploy release mới.
+- Backup theo mốc thời gian (timestamp) để dễ rollback.
+- Lưu trữ file backup ở vị trí an toàn (khác với thư mục project nếu môi trường sản xuất).
+
+
+
+7.1 Backup bằng pg_dump
+- pg_dump -U postgres -d qlbg_db > data/backup_qlbg_db.sql
+
+7.2 Restore
+- Tạo database mới:
+  - psql -U postgres -c "CREATE DATABASE qlbg_db"
+- Restore:
+  - psql -U postgres -d qlbg_db < data/backup_qlbg_db.sql
+
+7.3 Backup khi dùng Docker (pg_dumpall)
+- docker exec -t <container_id> pg_dumpall -c -U postgres > data/dump_YYYY-MM-DD_HH_MM.sql
+
+7.4 Backup theo Python script (JSON)
+- data/export_data.py
+- Chạy:
+  - cd backend
+  - python ../data/export_data.py
+- Output vào data/json_backup/
+
+8) Checklist trước khi đưa lên production
+- [ ] .env đúng cho production (DB + JWT + CORS)
+- [ ] Health check OK
+- [ ] Admin login OK (nếu seed được giữ)
+- [ ] Payment methods có đủ record
+- [ ] Test flows:
+  - add-to-cart → checkout → create order
+  - admin update order status
+  - coupon apply đúng
+- [ ] Backup đã tạo gần thời điểm deploy
+
+9) Checklist sau khi deploy
+- [ ] Kiểm tra logs admin
+- [ ] Kiểm tra error rate frontend (console)
+- [ ] Kiểm tra export Excel (nếu dùng)
+
+10) Ghi chú quan trọng
+- Production nên cân nhắc migrate bằng Alembic thay vì create_all() để an toàn schema.
+- Nên tắt/giới hạn seed admin/payment default hoặc đổi mật khẩu mặc định sau khi deploy thật.

@@ -1,0 +1,79 @@
+KIẾN TRÚC TỔNG QUAN (OVERVIEW)
+
+1) Tổng quan hệ thống
+Hệ thống tách biệt Frontend và Backend, giao tiếp qua REST API.
+
+- Frontend:
+  - Vue 3 + Vite
+  - Vue Router: điều hướng theo role/client-admin.
+  - Pinia: store cho auth, cart, wishlist.
+  - Axios: gọi API.
+  - UI/UX: Tailwind CSS (v4) + custom CSS, AOS animations.
+
+- Backend:
+  - FastAPI
+  - Routers tách theo module (auth/users/products/orders/cart/wishlists/reviews/coupons/payments/dashboard/logs/banks/payment_methods/addresses…)
+  - SQLAlchemy ORM + PostgreSQL
+  - JWT Auth (access/refresh) + bcrypt hash password
+  - Pydantic schemas để validate request/response
+
+2) Luồng request phổ biến (end-to-end)
+2.1 Client → Backend
+- Người dùng tương tác UI (login, thêm sản phẩm vào cart, checkout…)
+- Frontend gọi Axios đến các endpoint backend (thường prefix /api)
+- Backend validate schema, kiểm tra quyền (role), xử lý service-layer, tương tác DB.
+- Backend trả JSON response hoặc lỗi HTTP chuẩn.
+
+2.2 Backend seed dữ liệu khi startup
+Trong app/main.py:
+- Base.metadata.create_all(bind=engine) để tạo bảng theo models.
+- startup event:
+  - seed_payment_methods(): nếu bảng payment_method trống → chèn 4 phương thức mặc định (COD, bank_transfer, momo, zalopay).
+  - create_default_admin(): nếu chưa có admin@qlbg.com → tạo với password hash từ admin123.
+
+3) Cấu trúc mã nguồn (theo repo)
+3.1 Backend (/backend/app)
+- main.py: khởi tạo app FastAPI, CORS, include_router các module, seed startup.
+- app/configs:
+  - configs/config.py: Settings từ env (.env) tạo DATABASE_URL, cors origins list.
+  - configs/database.py: engine, SessionLocal, Base…
+- app/models: toàn bộ entity theo SQLAlchemy
+  - user, product, category, cart, wishlist, address, order, payment, coupon, review, log…
+- app/schemas: Pydantic request/response theo từng module.
+- app/routers: endpoint theo module.
+- app/services: logic nghiệp vụ (service layer) – giúp backend dễ maintain.
+- app/utils: helpers, logger, security.
+
+3.2 Frontend (/frontend/src)
+- App.vue: root application.
+- layouts/:
+  - ClientLayout / AccountLayout / AdminLayout
+- router/:
+  - index.js khai báo route & middleware/guard theo role.
+- stores/:
+  - auth, cart, wishlist
+- services/:
+  - api.js, apiPublic.js (Axios instance với baseURL & interceptor)
+- views/:
+  - admin/* và client/* và auth/*
+- composables/:
+  - useToast.js: hiển thị toast đồng bộ.
+- assets/:
+  - main.css: style tổng thể.
+
+4) Chuẩn tương tác API
+- Frontend dùng Axios instance có cấu hình proxy dev.
+- CORS được bật trên backend theo settings.cors_origins_list.
+
+5) Mục tiêu kiến trúc để phát hành tốt
+- Tách module giúp kiểm soát phạm vi, giảm rủi ro khi deploy.
+- Seed dữ liệu đảm bảo môi trường mới chạy ngay.
+- Standard error handling giúp vận hành và debug nhanh.
+
+6) Quy trình release ở mức kiến trúc
+- Bước 1: build frontend production (npm run build)
+- Bước 2: chạy backend với uvicorn + env đúng cấu hình
+- Bước 3: đảm bảo DB migrate/create tables hợp lệ
+- Bước 4: seed admin/payment methods (startup)
+- Bước 5: kiểm tra /api/health và một vài endpoint chính
+- Bước 6: backup trước và sau deploy theo checklist

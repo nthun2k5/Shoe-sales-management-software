@@ -1,0 +1,122 @@
+CHI TIẾT BACKEND (FASTAPI)
+
+1) Khởi tạo ứng dụng
+File chính: backend/app/main.py
+- FastAPI(title, description, version)
+- CORS Middleware:
+  - allow_origins = settings.cors_origins_list
+  - allow_methods, allow_headers bật wildcard
+
+2) Đăng ký router
+main.py bao gồm:
+- app.include_router(auth)
+- app.include_router(users)
+- app.include_router(products)
+- app.include_router(categories)
+- app.include_router(orders)
+- app.include_router(cart)
+- app.include_router(wishlists)
+- app.include_router(reviews)
+- app.include_router(coupons)
+- app.include_router(payments)
+- app.include_router(dashboard)
+- app.include_router(logs)
+- app.include_router(banks)
+- app.include_router(payment_methods)
+- app.include_router(addresses)
+
+3) Tạo bảng & seed dữ liệu
+- Base.metadata.create_all(bind=engine): tạo schema cơ bản (đồng bộ với models).
+
+3.1 Seed payment methods
+- Startup seed_payment_methods():
+  - Query: nếu db.query(PhuongThucThanhToan).count() == 0
+  - Insert 4 record mặc định:
+    - cod (COD)
+    - bank_transfer (chuyển khoản ngân hàng, có hỗ trợ QR)
+    - momo (phí 1%/giới hạn tối thiểu/tối đa)
+    - zalopay (phí cố định 1100)
+
+3.2 Seed admin default
+- create_default_admin():
+  - kiểm tra NguoiDung.email == "admin@qlbg.com"
+  - nếu chưa có → tạo user role="quan_tri" và dang_hoat_dong=True
+  - mật khẩu admin123 được hash_password() (bcrypt) trước khi lưu.
+
+4) Config (settings)
+backend/app/configs/config.py
+- BaseSettings đọc env qua .env
+- Thuộc tính:
+  - DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME
+  - JWT_KEY, ALGORITHM, JWT_TOKEN_EXPIRE
+  - CORS_ORIGINS (chuỗi phân tách dấu phẩy)
+  - MAX_IMAGE_SIZE_MB
+- Property:
+  - DATABASE_URL dùng cho SQLAlchemy engine
+  - cors_origins_list chuyển từ chuỗi sang List[str]
+
+5) ORM & Data model
+Repo có app/models/ với nhiều entity.
+- Nguyên tắc:
+  - Mỗi module có model tương ứng (ví dụ product, category, order…)
+  - Order/payment/log có quan hệ với các entity khác để phục vụ thống kê và theo dõi luồng.
+
+6) Schemas (Pydantic)
+- app/schemas/ chứa request/response DTO.
+- Lợi ích:
+  - Validate dữ liệu input chuẩn theo kiểu.
+  - Tách model DB và API contract, giảm rủi ro khi thay đổi internal schema.
+
+7) Routers (API layer)
+- app/routers/* chia endpoint theo module.
+- Các endpoint có thể theo pattern chung:
+  - GET: list/detail
+  - POST: create
+  - PUT/PATCH: update
+  - DELETE: delete
+- Với admin thì bổ sung guard role.
+
+8) Services layer
+- app/services/* gom logic nghiệp vụ:
+  - tính toán giá, áp coupon
+  - xử lý tạo order từ cart
+  - cập nhật trạng thái đơn
+  - ghi logs hành động admin
+
+9) Utilities
+- app/utils/security.py:
+  - hash_password, verify_password (bcrypt)
+  - tạo JWT access/refresh; decode & kiểm tra token
+- app/utils/logger.py:
+  - ghi log vào DB (phục vụ admin LogsView)
+
+10) Error handling chuẩn
+- Backend trả HTTP status code theo lỗi:
+  - 400/401/403/404/409/422/500
+- Response dạng "detail" mô tả lỗi.
+
+11) Endpoints quan trọng cần check khi release
+- GET /api/health → status ok
+- Auth:
+  - đăng ký/đăng nhập, refresh token, đổi mật khẩu
+- Products:
+  - list/search/filter
+- Cart/Checkout:
+  - thêm/xóa sản phẩm cart
+  - áp dụng coupon
+  - tạo order
+- Orders:
+  - list order theo user/admin
+  - cập nhật trạng thái vận chuyển (admin)
+- Payments/payment_methods:
+  - list phương thức thanh toán
+
+12) Hướng dẫn chạy backend (dev/prod)
+- Tạo venv và cài requirements.txt
+- uvicorn app.main:app --reload
+- đảm bảo .env có DB + JWT + CORS.
+
+13) Ghi chú phát hành
+- Vì main.py dùng create_all() nên khi deploy production cần chú ý:
+  - nếu muốn migrate schema an toàn dùng Alembic (repo có alembic dependency)
+  - nếu đơn giản có thể rely create_all cho demo/lab, nhưng production nên migrate chuẩn.

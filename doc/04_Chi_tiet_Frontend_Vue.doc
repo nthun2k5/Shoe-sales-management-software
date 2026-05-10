@@ -1,0 +1,101 @@
+CHI TIẾT FRONTEND (VUE 3)
+
+1) Tổng quan
+Frontend dùng Vue 3 + Vite.
+- Routing: Vue Router 4
+- State: Pinia
+- HTTP: Axios instances trong src/services
+- UI: Tailwind CSS v4 + custom css + AOS animations
+
+2) Kiến trúc thư mục chính
+- src/layouts/
+  - ClientLayout.vue: layout cho trang client
+  - AccountLayout.vue: khung account (profile/address...)
+  - AdminLayout.vue: khung cho admin
+
+- src/views/
+  - auth/: LoginView, RegisterView
+  - client/: Home/Dashboard/ProductList/Detail/Cart/Checkout/Orders/Profile/etc.
+  - admin/: Dashboard/Products/Categories/Orders/Users/Banks/PaymentMethods/Coupons/Analytics/Logs/Inventory...
+
+- src/router/index.js
+  - định nghĩa routes và guards theo auth/role (admin vs client)
+
+- src/stores/
+  - auth.js: quản lý token, user role
+  - cart.js: quản lý cart items
+  - wishlist.js: quản lý wishlist
+
+- src/services/
+  - api.js: axios có auth header + interceptor refresh (nếu có)
+  - apiPublic.js: axios cho endpoint public
+
+- src/composables/
+  - useToast.js: toast cho success/error đồng bộ UI
+
+3) Luồng giao diện chính (Client)
+3.1 Đăng nhập/đăng ký
+- Route: /login, /register
+- On success:
+  - set token vào store
+  - redirect đến dashboard/client home
+
+3.2 Duyệt sản phẩm → xem chi tiết
+- ProductListView: list/sort/search
+- ProductDetailView: hiển thị ảnh, thông số, chọn size, add to cart/wishlist
+
+3.3 Giỏ hàng → Checkout
+- CartView:
+  - list items, update quantity
+  - remove item
+- CheckoutView:
+  - chọn địa chỉ
+  - áp dụng coupon
+  - chọn phương thức thanh toán
+  - submit tạo order
+
+3.4 Lịch sử đơn & chi tiết đơn
+- OrderHistoryView: list theo trạng thái
+- OrderDetailView: chi tiết thanh toán/vận chuyển
+
+3.5 Wishlist
+- WishlistView: list sản phẩm yêu thích
+
+4) Luồng giao diện chính (Admin)
+4.1 Dashboard
+- Analytics: biểu đồ doanh thu và thống kê
+- Quick cards: tổng đơn/tổng doanh thu/số user
+
+4.2 Quản lý sản phẩm
+- ProductsView + ProductFormView
+- CategoriesView + InventoryView
+- CRUD sản phẩm/danh mục; cập nhật tồn kho.
+
+4.3 Quản lý đơn hàng
+- OrdersView: list order, cập nhật trạng thái admin
+- Orders workflow:
+  - xác nhận → giao hàng → hoàn thành (theo mô tả FEATURES)
+
+4.4 Người dùng & mã giảm giá & phương thức thanh toán
+- UsersView: khóa/mở tài khoản
+- CouponsView: tạo/quản lý coupon
+- PaymentMethods/Banks: quản lý cấu hình phương thức
+
+4.5 Nhật ký
+- LogsView: hiển thị log hành động quan trọng
+
+5) Xử lý lỗi & UX
+- Global Toast: dùng useToast để hiển thị error/success.
+- Loading state: spinner/skeleton khi request.
+- Image fallback: nếu ảnh sản phẩm lỗi.
+- Route guards: chặn vào admin nếu chưa có role.
+
+6) Build production
+- npm run build
+- Xác định chiến lược deploy:
+  - Nếu hosting tách domain: frontend build static
+  - Nếu chung server: cấu hình serve static và proxy API.
+
+7) Lưu ý phát hành
+- Proxy dev hiện tại: server.proxy '/api' → http://localhost:8000
+- Production cần trỏ baseURL Axios về backend thật (theo domain/env).

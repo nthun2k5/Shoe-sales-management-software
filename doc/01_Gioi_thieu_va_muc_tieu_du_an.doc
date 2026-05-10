@@ -1,0 +1,33 @@
+DỰ ÁN: GIÀY ĐẸP STORE (QLBG)
+
+Mục tiêu tài liệu DOC
+- Cung cấp mô tả chi tiết, đủ để người đọc hiểu cấu trúc hệ thống, luồng nghiệp vụ end-to-end và cách phát hành (release) dự án.
+- Tập trung vào kiến trúc, triển khai, bảo mật, xử lý lỗi, và quy trình backup/restore.
+- Tài liệu này hướng tới việc chạy được “từ dev → production”, có checklist rõ ràng.
+
+1) Giới thiệu dự án
+Giày Đẹp Store (QLBG) là hệ thống quản lý cửa hàng giày hiện đại (full-stack). Ứng dụng gồm:
+- Frontend (Vue 3 + Vite): giao diện Client và Admin.
+- Backend (FastAPI): REST API, JWT Auth, quản lý dữ liệu qua SQLAlchemy ORM.
+- Database (PostgreSQL): lưu toàn bộ nghiệp vụ (users, sản phẩm, đơn hàng, thanh toán, logs…).
+
+2) Vấn đề giải quyết
+- Quản lý sản phẩm và tồn kho theo mô hình CRUD có kiểm soát.
+- Hỗ trợ luồng mua hàng: giỏ hàng → checkout → đơn hàng.
+- Hỗ trợ admin điều phối đơn hàng, cập nhật trạng thái vận chuyển.
+- Cho phép xuất dữ liệu (Excel) và theo dõi nhật ký hệ thống.
+- Đảm bảo bảo mật qua JWT/refresh + password hashing.
+
+3) Phạm vi chức năng (theo repo hiện trạng)
+- Client: đăng nhập/đăng ký, quản lý hồ sơ & địa chỉ, duyệt sản phẩm, giỏ hàng, wishlist, checkout, theo dõi lịch sử đơn, đánh giá/hủy đơn.
+- Admin: dashboard thống kê, quản lý sản phẩm/danh mục/tồn kho, quản lý đơn hàng & trạng thái, quản lý người dùng, mã giảm giá, phương thức thanh toán, nhật ký, export Excel.
+
+4) Giả định & ràng buộc
+- Backend cấp API qua /api prefix (frontend proxy /api → http://localhost:8000 khi dev).
+- Seed dữ liệu quan trọng: payment methods và admin mặc định được tạo ở startup.
+- Ảnh sản phẩm/biểu diễn lưu theo Base64 (theo mô tả tài liệu dự án).
+
+5) Đầu ra của gói phát hành (release)
+- Chạy được frontend (dev/prod) + backend (uvicorn) + database (PostgreSQL).
+- Có file cấu hình (.env) và hướng dẫn vận hành.
+- Có quy trình backup/restore và checklist trước khi deploy thật.
