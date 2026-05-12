@@ -174,8 +174,8 @@ const { success, error: showError } = useToast()
 const orders = ref([])
 const loading = ref(true)
 const statusFilter = ref('')
-const fromDate = ref(new Date().toISOString().split('T')[0])
-const toDate = ref(new Date().toISOString().split('T')[0])
+const fromDate = ref('')
+const toDate = ref('')
 const orderIdSearch = ref('')
 
 const statusLabels = { cho_xu_ly: 'Chờ xử lý', da_xac_nhan: 'Đã xác nhận', dang_giao: 'Đang giao', da_giao: 'Đã giao', da_huy: 'Đã hủy' }
@@ -222,8 +222,8 @@ async function fetchOrders() {
 
 function resetFilters() {
   statusFilter.value = ''
-  fromDate.value = new Date().toISOString().split('T')[0]
-  toDate.value = new Date().toISOString().split('T')[0]
+  fromDate.value = ''
+  toDate.value = ''
   orderIdSearch.value = ''
   fetchOrders()
 }

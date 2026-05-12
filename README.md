@@ -1,6 +1,6 @@
 <div align="center">
 
-![Giày Đẹp Store Banner](doc/images/banner.png)
+![Giày Đẹp Store Banner](doc/images/1_Trang_chu_Banner.png)
 
 # 👟 Giày Đẹp Store - Premium Shoe Management System
 ### *Modern Full-stack Solution for Luxury Footwear Retail*
@@ -72,11 +72,17 @@ npm run dev
 
 ## 📸 Hình ảnh giao diện
 <div align="center">
-  <p><em>Thống kê doanh thu (Dashboard)</em></p>
-  <img src="doc/images/dashboard.png" width="80%" alt="Dashboard">
+  <p><em>Trang chủ & Sản phẩm</em></p>
+  <img src="doc/images/1_Trang_chu_Banner.png" width="48%" alt="Trang chủ">
+  <img src="doc/images/2_Trang_chu_San_pham.png" width="48%" alt="Sản phẩm">
   <br><br>
-  <p><em>Trải nghiệm sản phẩm</em></p>
-  <img src="doc/images/product_page.png" width="80%" alt="Product Page">
+  <p><em>Chi tiết sản phẩm & Giỏ hàng</em></p>
+  <img src="doc/images/33_Client_Chi_tiet_san_pham.png" width="48%" alt="Chi tiết sản phẩm">
+  <img src="doc/images/32_Client_Gio_hang.png" width="48%" alt="Giỏ hàng">
+  <br><br>
+  <p><em>Quản trị viên (Admin Dashboard & Đơn hàng)</em></p>
+  <img src="doc/images/15_Admin_Dashboard.png" width="48%" alt="Admin Dashboard">
+  <img src="doc/images/20_Admin_Quan_ly_don_hang.png" width="48%" alt="Admin Đơn hàng">
 </div>
 
 ## 📂 Cấu trúc dự án
@@ -143,11 +149,17 @@ npm run dev
 
 ## 📸 Screenshots
 <div align="center">
-  <p><em>Dashboard Analytics</em></p>
-  <img src="doc/images/dashboard.png" width="80%" alt="Dashboard">
+  <p><em>Homepage & Products</em></p>
+  <img src="doc/images/1_Trang_chu_Banner.png" width="48%" alt="Homepage">
+  <img src="doc/images/2_Trang_chu_San_pham.png" width="48%" alt="Products">
   <br><br>
-  <p><em>Product Experience</em></p>
-  <img src="doc/images/product_page.png" width="80%" alt="Product Page">
+  <p><em>Product Details & Cart</em></p>
+  <img src="doc/images/33_Client_Chi_tiet_san_pham.png" width="48%" alt="Product Details">
+  <img src="doc/images/32_Client_Gio_hang.png" width="48%" alt="Cart">
+  <br><br>
+  <p><em>Admin Dashboard & Orders</em></p>
+  <img src="doc/images/15_Admin_Dashboard.png" width="48%" alt="Admin Dashboard">
+  <img src="doc/images/20_Admin_Quan_ly_don_hang.png" width="48%" alt="Admin Orders">
 </div>
 
 ## 📂 Project Structure

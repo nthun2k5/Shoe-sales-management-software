@@ -333,7 +333,7 @@ function closeDrawer() {
 
 async function fetchAddresses() {
   try {
-    const res = await api.get('/addresses/')
+    const res = await api.get('/addresses')
     addresses.value = res.data
   } catch (e) {
     console.error('Address fetch error:', e)
@@ -347,7 +347,7 @@ async function saveAddress() {
       await api.put(`/addresses/${editingId.value}`, addressForm.value)
       success('Đã cập nhật địa chỉ')
     } else {
-      await api.post('/addresses/', addressForm.value)
+      await api.post('/addresses', addressForm.value)
       success('Đã thêm địa chỉ mới')
     }
     closeDrawer()
@@ -398,7 +398,7 @@ onMounted(async () => {
   try {
     const [dashRes, addrRes] = await Promise.all([
       api.get('/dashboard/client'),
-      api.get('/addresses/')
+      api.get('/addresses')
     ])
     dashboard.value = dashRes.data
     addresses.value = addrRes.data
