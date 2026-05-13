@@ -17,7 +17,10 @@ class Settings(BaseSettings):
 
     @property
     def DATABASE_URL(self) -> str:
-        return f"postgresql://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+        import urllib.parse
+        user = urllib.parse.quote_plus(self.DB_USER)
+        password = urllib.parse.quote_plus(self.DB_PASSWORD)
+        return f"postgresql://{user}:{password}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
     @property
     def cors_origins_list(self) -> List[str]:
