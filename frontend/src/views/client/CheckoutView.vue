@@ -305,6 +305,7 @@ const orderLoading = ref(false)
 const orderError = ref('')
 
 const showBankModal = ref(false)
+const createdOrderId = ref(null)
 const createdOrderCode = ref('')
 
 const shipping = computed(() => (cartStore.totalAmount || cartStore.tong_tien) >= 500000 ? 0 : 30000)
@@ -382,6 +383,7 @@ async function placeOrder() {
     if (ma_giam_gia.value && couponValid.value) payload.ma_giam_gia = ma_giam_gia.value
     const res = await api.post('/orders', payload)
 
+    createdOrderId.value = res.data.id
     createdOrderCode.value = res.data.ma_don_hang
     if (form.phuong_thuc_thanh_toan === 'bank_transfer' || form.phuong_thuc_thanh_toan === 'momo' || form.phuong_thuc_thanh_toan === 'zalopay') {
       showBankModal.value = true
@@ -397,11 +399,23 @@ async function placeOrder() {
   }
 }
 
-function finishOrder() {
-  showBankModal.value = false
-  success('Đặt hàng thành công!')
-  cartStore.reset()
-  router.push('/orders')
+async function finishOrder() {
+  try {
+    if (createdOrderId.value) {
+      await api.post(`/orders/${createdOrderId.value}/confirm-payment`)
+    }
+    showBankModal.value = false
+    success('Đặt hàng và xác nhận thanh toán thành công!')
+    cartStore.reset()
+    router.push('/orders')
+  } catch (e) {
+    console.error('Confirm payment error:', e)
+    // Still proceed but maybe show a different message
+    showBankModal.value = false
+    success('Đặt hàng thành công!')
+    cartStore.reset()
+    router.push('/orders')
+  }
 }
 
 onMounted(async () => {

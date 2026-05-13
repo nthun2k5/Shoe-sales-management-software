@@ -81,7 +81,13 @@ Chart.register(...registerables)
 const data = ref({})
 const revenueChartRef = ref(null)
 const statusChartRef = ref(null)
-const statusLabels = { cho_xu_ly: 'Chờ xử lý', da_xac_nhan: 'Đã xác nhận', dang_giao: 'Đang giao', da_giao: 'Đã giao', da_huy: 'Đã hủy' }
+const statusLabels = { 
+  cho_xu_ly: 'Chờ xử lý', 
+  da_xac_nhan: 'Đã xác nhận', 
+  dang_giao: 'Đang giao', 
+  da_giao: 'Đã giao', 
+  da_huy: 'Đã hủy' 
+}
 
 function formatPrice(p) { return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(p) }
 

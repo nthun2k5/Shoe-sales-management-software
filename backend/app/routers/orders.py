@@ -241,24 +241,73 @@ def update_don_hang_status(
     don_hang = db.query(DonHang).filter(DonHang.id == don_hang_id).first()
     if not don_hang:
         raise HTTPException(status_code=404, detail="Đơn hàng không tồn tại")
+    
+    # Define status order/priority
+    status_priority = {
+        "cho_xu_ly": 1,
+        "da_xac_nhan": 2,
+        "dang_giao": 3,
+        "da_giao": 4,
+        "da_huy": 5
+    }
+
+    current_p = status_priority.get(don_hang.trang_thai, 0)
+    new_p = status_priority.get(data.trang_thai, 0)
+
+    if don_hang.trang_thai == "da_giao":
+        raise HTTPException(status_code=400, detail="Đơn hàng đã giao thành công, không thể thay đổi trạng thái")
+    
+    if don_hang.trang_thai == "da_huy":
+        raise HTTPException(status_code=400, detail="Đơn hàng đã hủy, không thể thay đổi trạng thái")
+
+    if new_p <= current_p and data.trang_thai != don_hang.trang_thai:
+        raise HTTPException(status_code=400, detail="Không thể cập nhật lùi trạng thái đơn hàng")
+    
+    status_messages = {
+        "da_xac_nhan": "Đơn hàng đã được xác nhận. Shop sẽ sớm xử lý và chuyển hàng đến bạn.",
+        "dang_giao": "Đơn hàng đang trên đường giao đến bạn. Vui lòng để ý điện thoại để nhận hàng.",
+        "da_giao": "Đơn hàng đã giao thành công. Cảm ơn bạn đã mua hàng! Đừng quên để lại đánh giá nhé.",
+        "da_huy": data.ghi_chu if data.ghi_chu else "Đơn hàng đã bị hủy bởi shop."
+    }
+
+    # If cancelling, require a reason
+    if data.trang_thai == "da_huy" and not data.ghi_chu:
+        raise HTTPException(status_code=400, detail="Vui lòng điền lý do hủy đơn hàng")
+
+    if not data.trang_thai:
+        raise HTTPException(status_code=400, detail="Thiếu trạng thái đơn hàng")
+
+    mo_ta_log = status_messages.get(data.trang_thai, f"Cập nhật trạng thái đơn hàng thành {data.trang_thai}")
+    
     don_hang.trang_thai = data.trang_thai
+    if data.ghi_chu:
+        don_hang.ghi_chu = data.ghi_chu
+
     if data.trang_thai == "da_giao":
         don_hang.trang_thai_thanh_toan = "da_thanh_toan"
         thanh_toan = db.query(ThanhToan).filter(ThanhToan.id_don_hang == don_hang.id).first()
         if thanh_toan:
             thanh_toan.trang_thai = "da_hoan_thanh"
             thanh_toan.thoi_diem_thanh_toan = datetime.now(timezone.utc)
+    
+    if data.trang_thai == "da_huy":
+        for item in don_hang.chi_tiet_don_hangs:
+            san_pham = db.query(SanPham).filter(SanPham.id == item.id_san_pham).first()
+            if san_pham:
+                san_pham.so_luong_ton += item.so_luong
+
     db.commit()
     
-    # Log activity
-    log_activity(db, "ORDER_STATUS_UPDATE", f"Cập nhật trạng thái đơn hàng {don_hang.ma_don_hang} thành {data.trang_thai}", admin.id, id_don_hang=don_hang.id)
+    # Log activity with specific status as action
+    log_activity(db, data.trang_thai, mo_ta_log, admin.id, id_don_hang=don_hang.id)
     
-    return {"message": f"Đã cập nhật trạng thái đơn hàng thành {data.trang_thai}"}
+    return {"message": "Đã cập nhật trạng thái đơn hàng"}
 
 
 @router.put("/{don_hang_id}/cancel")
 def cancel_don_hang(
     don_hang_id: int,
+    data: Optional[DonHangCapNhatTrangThai] = None,
     db: Session = Depends(get_db),
     current_user: NguoiDung = Depends(get_current_user)
 ):
@@ -270,7 +319,19 @@ def cancel_don_hang(
         raise HTTPException(status_code=403, detail="Không có quyền")
     if don_hang.trang_thai not in ["cho_xu_ly", "da_xac_nhan"]:
         raise HTTPException(status_code=400, detail="Không thể hủy đơn hàng này")
+    
+    ly_do_huy = "Hủy mua từ khách hàng"
+    if data and data.ghi_chu:
+        ly_do_huy = data.ghi_chu
+    elif current_user.vai_tro == "quan_tri":
+        # Admin cancels must have a reason (if using this endpoint)
+        if not data or not data.ghi_chu:
+            raise HTTPException(status_code=400, detail="Vui lòng điền lý do hủy đơn hàng")
+        ly_do_huy = data.ghi_chu
+
     don_hang.trang_thai = "da_huy"
+    don_hang.ghi_chu = ly_do_huy
+    
     for item in don_hang.chi_tiet_don_hangs:
         san_pham = db.query(SanPham).filter(SanPham.id == item.id_san_pham).first()
         if san_pham:
@@ -278,9 +339,38 @@ def cancel_don_hang(
     db.commit()
     
     # Log activity
-    log_activity(db, "ORDER_CANCEL", f"Đã hủy đơn hàng {don_hang.ma_don_hang}", current_user.id, id_don_hang=don_hang.id)
+    log_activity(db, "da_huy", ly_do_huy, current_user.id, id_don_hang=don_hang.id)
     
     return {"message": "Đã hủy đơn hàng"}
+
+
+@router.post("/{don_hang_id}/confirm-payment")
+def confirm_payment(
+    don_hang_id: int,
+    db: Session = Depends(get_db),
+    current_user: NguoiDung = Depends(get_current_user)
+):
+    """Xác nhận đã thanh toán (người dùng)."""
+    don_hang = db.query(DonHang).filter(DonHang.id == don_hang_id, DonHang.id_nguoi_dung == current_user.id).first()
+    if not don_hang:
+        raise HTTPException(status_code=404, detail="Đơn hàng không tồn tại")
+    
+    don_hang.trang_thai_thanh_toan = "da_thanh_toan"
+    # Also update the order status to 'da_xac_nhan' if it was 'cho_xu_ly'
+    if don_hang.trang_thai == "cho_xu_ly":
+        don_hang.trang_thai = "da_xac_nhan"
+
+    thanh_toan = db.query(ThanhToan).filter(ThanhToan.id_don_hang == don_hang.id).first()
+    if thanh_toan:
+        thanh_toan.trang_thai = "da_hoan_thanh"
+        thanh_toan.thoi_diem_thanh_toan = datetime.now(timezone.utc)
+    
+    db.commit()
+    
+    # Log activity
+    log_activity(db, "PAYMENT_CONFIRM", f"Khách hàng xác nhận đã thanh toán cho đơn hàng {don_hang.ma_don_hang}. Trạng thái đơn hàng chuyển thành Đã xác nhận.", current_user.id, id_don_hang=don_hang.id)
+    
+    return {"message": "Đã xác nhận thanh toán"}
 
 
 @router.get("", response_model=PhanHoiDanhSachDonHang)

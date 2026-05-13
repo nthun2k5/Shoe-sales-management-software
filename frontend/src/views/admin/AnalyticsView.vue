@@ -128,7 +128,13 @@ const data = ref({})
 const period = ref('7')
 const revenueRef = ref(null)
 const statusRef = ref(null)
-const statusLabels = { cho_xu_ly: 'Chờ xử lý', da_xac_nhan: 'Đã xác nhận', dang_giao: 'Đang giao', da_giao: 'Đã giao', da_huy: 'Đã hủy' }
+const statusLabels = { 
+  cho_xu_ly: 'Chờ xử lý', 
+  da_xac_nhan: 'Đã xác nhận', 
+  dang_giao: 'Đang giao', 
+  da_giao: 'Đã giao', 
+  da_huy: 'Đã hủy' 
+}
 let revenueChart = null
 let statusChart = null
 

@@ -44,7 +44,8 @@ class DonHangTao(BaseModel):
 
 
 class DonHangCapNhatTrangThai(BaseModel):
-    trang_thai: str
+    trang_thai: Optional[str] = None
+    ghi_chu: Optional[str] = None
 
 
 class PhanHoiDonHang(BaseModel):

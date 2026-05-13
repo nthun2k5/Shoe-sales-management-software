@@ -103,9 +103,9 @@
               <div v-for="(log, index) in order.lich_su_tac_dong" :key="log.id" class="relative pl-10 pb-8 last:pb-0">
                 <div :class="['absolute left-2.5 w-3 h-3 rounded-full border-2 border-white ring-2 mt-1.5', getLogColor(log.hanh_dong)]"></div>
                 <div>
-                  <p class="text-sm font-semibold text-gray-900">{{ getActionLabel(log.hanh_dong) }}</p>
-                  <p class="text-xs text-gray-500 mt-0.5">{{ log.mo_ta }}</p>
-                  <p class="text-xs text-gray-400 mt-1">{{ formatDateTime(log.ngay_tao) }}</p>
+                  <p class="text-sm font-black text-gray-900 mb-1">{{ getActionLabel(log) }}</p>
+                  <p class="text-xs text-gray-500 leading-relaxed">{{ log.mo_ta }}</p>
+                  <p class="text-[10px] text-gray-400 mt-2 font-medium">{{ formatDateTime(log.ngay_tao) }}</p>
                 </div>
               </div>
             </div>
@@ -119,6 +119,17 @@
             <button @click="cancelOrder" class="w-full py-3 border-2 border-red-200 text-red-600 rounded-xl text-sm font-bold hover:bg-red-50 transition-colors flex items-center justify-center gap-2">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
               Hủy đơn hàng
+            </button>
+          </div>
+
+          <!-- Payment Confirm for Bank Transfer -->
+          <div v-if="order.trang_thai_thanh_toan !== 'da_thanh_toan' && (order.phuong_thuc_thanh_toan === 'bank_transfer' || order.phuong_thuc_thanh_toan === 'momo' || order.phuong_thuc_thanh_toan === 'zalopay')" 
+            class="bg-white rounded-2xl border border-primary-100 shadow-sm p-6 space-y-4">
+            <h4 class="font-bold text-gray-900 text-sm">Xác nhận thanh toán</h4>
+            <p class="text-xs text-gray-500">Nếu bạn đã chuyển khoản, vui lòng ấn nút bên dưới để thông báo cho shop.</p>
+            <button @click="confirmPayment" class="w-full py-3 bg-primary-600 text-white rounded-xl text-sm font-bold hover:bg-primary-700 transition-colors shadow-lg shadow-primary-500/20 flex items-center justify-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              Tôi đã thanh toán
             </button>
           </div>
         </div>
@@ -144,7 +155,13 @@ const router = useRouter()
 const order = ref(null)
 const loading = ref(true)
 
-const statusLabels = { cho_xu_ly: 'Chờ xử lý', da_xac_nhan: 'Đã xác nhận', dang_giao: 'Đang giao', da_giao: 'Đã giao', da_huy: 'Đã hủy' }
+const statusLabels = { 
+  cho_xu_ly: 'Chờ xử lý', 
+  da_xac_nhan: 'Đã xác nhận', 
+  dang_giao: 'Đang giao', 
+  da_giao: 'Đã giao', 
+  da_huy: 'Đã hủy' 
+}
 const statusClasses = { cho_xu_ly: 'bg-yellow-100 text-yellow-700', da_xac_nhan: 'bg-blue-100 text-blue-700', dang_giao: 'bg-indigo-100 text-indigo-700', da_giao: 'bg-green-100 text-green-700', da_huy: 'bg-red-100 text-red-700' }
 const paymentMethods = { 
   cod: 'Thanh toán khi nhận hàng (COD)', 
@@ -156,13 +173,26 @@ const paymentMethods = {
 }
 
 const actionLabels = {
-  ORDER_CREATE: 'Đặt hàng',
+  ORDER_CREATE: 'Đặt hàng thành công',
   ORDER_STATUS_UPDATE: 'Cập nhật trạng thái',
   ORDER_CANCEL: 'Hủy đơn hàng',
+  PAYMENT_CONFIRM: 'Xác nhận thanh toán',
+  cho_xu_ly: 'Chờ xử lý',
+  da_xac_nhan: 'Đã xác nhận',
+  dang_giao: 'Đang giao',
+  da_giao: 'Đã giao',
+  da_huy: 'Đã hủy'
 }
 
-function getActionLabel(action) {
-  return actionLabels[action] || action
+function getActionLabel(log) {
+  if (log.hanh_dong === 'ORDER_STATUS_UPDATE') {
+    const desc = log.mo_ta.toLowerCase()
+    if (desc.includes('đang được giao') || desc.includes('đang giao')) return 'Đang giao'
+    if (desc.includes('đã giao thành công') || desc.includes('đã giao')) return 'Đã giao'
+    if (desc.includes('đã được xác nhận') || desc.includes('đã xác nhận')) return 'Đã xác nhận'
+    if (desc.includes('đã hủy') || desc.includes('đã bị hủy')) return 'Đã hủy'
+  }
+  return actionLabels[log.hanh_dong] || log.hanh_dong
 }
 
 function getLogColor(action) {
@@ -170,6 +200,12 @@ function getLogColor(action) {
     ORDER_CREATE: 'ring-green-500 bg-green-500',
     ORDER_STATUS_UPDATE: 'ring-blue-500 bg-blue-500',
     ORDER_CANCEL: 'ring-red-500 bg-red-500',
+    PAYMENT_CONFIRM: 'ring-indigo-500 bg-indigo-500',
+    cho_xu_ly: 'ring-yellow-500 bg-yellow-500',
+    da_xac_nhan: 'ring-blue-500 bg-blue-500',
+    dang_giao: 'ring-indigo-500 bg-indigo-500',
+    da_giao: 'ring-green-500 bg-green-500',
+    da_huy: 'ring-red-500 bg-red-500'
   }
   return colors[action] || 'ring-gray-400 bg-gray-400'
 }
@@ -191,13 +227,25 @@ async function fetchData() {
 }
 
 async function cancelOrder() {
-  if (!confirm('Bạn có chắc muốn hủy đơn hàng này?')) return
+  const ghi_chu = prompt('Vui lòng nhập lý do hủy đơn hàng (không bắt buộc):')
+  if (ghi_chu === null) return // User cancelled prompt
+
   try {
-    await api.put(`/orders/${route.params.id}/cancel`)
+    await api.put(`/orders/${route.params.id}/cancel`, { ghi_chu: ghi_chu.trim() || 'Hủy mua từ khách hàng' })
     success('Đã hủy đơn hàng')
     fetchData()
   } catch (e) {
     showError(e.response?.data?.detail || 'Lỗi hủy đơn')
+  }
+}
+
+async function confirmPayment() {
+  try {
+    await api.post(`/orders/${route.params.id}/confirm-payment`)
+    success('Xác nhận thanh toán thành công!')
+    fetchData()
+  } catch (e) {
+    showError(e.response?.data?.detail || 'Lỗi xác nhận')
   }
 }
 

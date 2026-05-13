@@ -178,7 +178,13 @@ const fromDate = ref('')
 const toDate = ref('')
 const orderIdSearch = ref('')
 
-const statusLabels = { cho_xu_ly: 'Chờ xử lý', da_xac_nhan: 'Đã xác nhận', dang_giao: 'Đang giao', da_giao: 'Đã giao', da_huy: 'Đã hủy' }
+const statusLabels = { 
+  cho_xu_ly: 'Chờ xử lý', 
+  da_xac_nhan: 'Đã xác nhận', 
+  dang_giao: 'Đang giao', 
+  da_giao: 'Đã giao', 
+  da_huy: 'Đã hủy' 
+}
 const statusClasses = { cho_xu_ly: 'bg-yellow-100 text-yellow-700', da_xac_nhan: 'bg-blue-100 text-blue-700', dang_giao: 'bg-indigo-100 text-indigo-700', da_giao: 'bg-green-100 text-green-700', da_huy: 'bg-red-100 text-red-700' }
 
 // Review
@@ -229,8 +235,14 @@ function resetFilters() {
 }
 
 async function cancelOrder(id) {
-  if (!confirm('Bạn có chắc muốn hủy đơn hàng này?')) return
-  try { await api.put(`/orders/${id}/cancel`); success('Đã hủy đơn hàng'); fetchOrders() }
+  const ghi_chu = prompt('Vui lòng nhập lý do hủy đơn hàng (không bắt buộc):')
+  if (ghi_chu === null) return // User cancelled prompt
+  
+  try { 
+    await api.put(`/orders/${id}/cancel`, { ghi_chu: ghi_chu.trim() || 'Hủy mua từ khách hàng' }); 
+    success('Đã hủy đơn hàng'); 
+    fetchOrders() 
+  }
   catch (e) { showError(e.response?.data?.detail || 'Lỗi hủy đơn') }
 }
 

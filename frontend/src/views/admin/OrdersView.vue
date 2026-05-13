@@ -52,7 +52,12 @@
             </td>
             <td class="px-4 py-4 text-gray-500 text-xs">{{ formatDate(o.ngay_tao) }}</td>
             <td class="px-6 py-4 text-right" @click.stop>
-              <select @change="updateStatus(o.id, $event.target.value)" :value="o.trang_thai" class="select-modern text-xs py-1 px-2 w-auto bg-gray-50 border-gray-200">
+              <select 
+                @change="updateStatus(o.id, $event.target.value)" 
+                :value="o.trang_thai" 
+                :disabled="o.trang_thai === 'da_giao' || o.trang_thai === 'da_huy'"
+                class="select-modern text-xs py-1 px-2 w-auto bg-gray-50 border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 <option v-for="(label, key) in statusLabels" :key="key" :value="key">{{ label }}</option>
               </select>
             </td>
@@ -101,8 +106,9 @@
                       <div class="absolute left-2 top-6 bottom-0 w-0.5 bg-gray-100 last:hidden"></div>
                       <div class="w-4 h-4 rounded-full bg-red-100 border-2 border-red-500 shrink-0 mt-1 z-10"></div>
                       <div>
-                        <p class="text-sm text-gray-800 font-medium">{{ log.mo_ta }} <span v-if="log.nguoi_dung" class="text-xs text-gray-500 italic">({{ log.nguoi_dung }})</span></p>
-                        <p class="text-[10px] text-gray-400 mt-1">{{ formatDateFull(log.ngay_tao) }}</p>
+                        <p class="text-sm font-black text-gray-900 mb-1">{{ getActionLabel(log) }}</p>
+                        <p class="text-xs text-gray-600 leading-relaxed">{{ log.mo_ta }} <span v-if="log.nguoi_dung" class="text-[10px] text-gray-400 italic"> — bởi {{ log.nguoi_dung }}</span></p>
+                        <p class="text-[10px] text-gray-400 mt-1 font-medium">{{ formatDateFull(log.ngay_tao) }}</p>
                       </div>
                     </div>
                   </div>
@@ -161,32 +167,160 @@ const selectedOrder = ref(null)
 function handleExport() {
   const data = orders.value.map(o => ({
     'Mã đơn hàng': o.ma_don_hang,
-    'Khách hàng': o.ten_nguoi_dung || o.ten_nguoi_nhan || 'N/A',
-    'Số điện thoại': o.sdt_nguoi_nhan,
+    'Ngày đặt': new Date(o.ngay_tao).toLocaleDateString('vi-VN'),
+    'Khách hàng': o.ho_ten || o.ten_nguoi_nhan,
+    'SĐT': o.so_dien_thoai || o.sdt_nguoi_nhan,
+    'Địa chỉ': o.dia_chi_nhan,
+    'Sản phẩm': o.chi_tiet_don_hangs.map(i => `${i.ten_san_pham} (x${i.so_luong})`).join(', '),
     'Tổng tiền': o.tong_tien,
     'Giảm giá': o.tien_giam_gia,
     'Phí ship': o.phi_van_chuyen,
-    'Thanh tiền': o.thanh_tien,
-    'PT Thanh toán': paymentMethodLabels[o.phuong_thuc_thanh_toan] || o.phuong_thuc_thanh_toan,
-    'TT Thanh toán': o.trang_thai_thanh_toan === 'da_thanh_toan' ? 'Đã TT' : 'Chưa TT',
+    'Thanh toán': o.thanh_tien,
+    'Phương thức': paymentMethodLabels[o.phuong_thuc_thanh_toan] || o.phuong_thuc_thanh_toan,
     'Trạng thái': statusLabels[o.trang_thai],
-    'Ngày đặt': new Date(o.ngay_tao).toLocaleDateString('vi-VN')
+    'Thanh toán': o.trang_thai_thanh_toan === 'da_thanh_toan' ? 'Đã thanh toán' : 'Chưa thanh toán'
   }))
-  exportToExcel(data, 'Danh_sach_don_hang', 'Don_hang')
+  exportToExcel(data, 'Danh_sach_don_hang', 'Đơn hàng')
 }
 
 function handlePrint() {
-  const content = document.getElementById('printable-invoice').innerHTML
-  const printWindow = window.open('', '', 'height=600,width=800')
-  printWindow.document.write('<html><head><title>Hóa đơn ' + selectedOrder.value.ma_don_hang + '</title>')
-  printWindow.document.write('<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">')
-  printWindow.document.write('</head><body class="p-10">')
-  printWindow.document.write('<div class="max-w-2xl mx-auto border p-8">')
-  printWindow.document.write('<div class="flex justify-between mb-8 border-b pb-4"><div><h1 class="text-2xl font-bold">GIÀY ĐẸP STORE</h1><p>Địa chỉ: 123 Đường ABC, Hà Nội</p><p>SĐT: 0123 456 789</p></div><div class="text-right"><h2 class="text-xl font-bold text-red-600">HÓA ĐƠN BÁN HÀNG</h2><p>Mã: ' + selectedOrder.value.ma_don_hang + '</p><p>Ngày: ' + new Date(selectedOrder.value.ngay_tao).toLocaleDateString("vi-VN") + '</p></div></div>')
-  printWindow.document.write(content)
-  printWindow.document.write('<div class="mt-10 pt-10 border-t flex justify-between px-10"><div><p class="font-bold mb-10">Người mua hàng</p><p>(Ký tên)</p></div><div class="text-center"><p class="font-bold mb-10">Người bán hàng</p><p>(Ký tên)</p></div></div>')
-  printWindow.document.write('</div>')
-  printWindow.document.write('</body></html>')
+  const order = selectedOrder.value
+  if (!order) return
+
+  const printWindow = window.open('', '', 'height=800,width=900')
+  const itemsHtml = order.chi_tiet_don_hangs.map((item, index) => `
+    <tr>
+      <td style="border-bottom: 1px solid #edf2f7; padding: 12px 8px; text-align: center;">${index + 1}</td>
+      <td style="border-bottom: 1px solid #edf2f7; padding: 12px 8px;">
+        <div style="font-weight: 600; color: #1a202c;">${item.ten_san_pham}</div>
+        <div style="font-size: 11px; color: #718096;">Size: ${item.kich_thuoc || 'N/A'}</div>
+      </td>
+      <td style="border-bottom: 1px solid #edf2f7; padding: 12px 8px; text-align: center;">${item.so_luong}</td>
+      <td style="border-bottom: 1px solid #edf2f7; padding: 12px 8px; text-align: right;">${formatPrice(item.don_gia)}</td>
+      <td style="border-bottom: 1px solid #edf2f7; padding: 12px 8px; text-align: right; font-weight: 600;">${formatPrice(item.thanh_tien)}</td>
+    </tr>
+  `).join('')
+
+  printWindow.document.write(`
+    <html>
+      <head>
+        <title>Hóa đơn ${order.ma_don_hang}</title>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+        <style>
+          body { font-family: 'Inter', sans-serif; color: #2d3748; line-height: 1.5; padding: 40px; }
+          .invoice-box { max-width: 800px; margin: auto; }
+          .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; border-bottom: 2px solid #e2e8f0; padding-bottom: 20px; }
+          .shop-info h1 { margin: 0; color: #e53e3e; font-size: 28px; font-weight: 800; }
+          .shop-info p { margin: 4px 0; font-size: 13px; color: #4a5568; }
+          .invoice-title { text-align: right; }
+          .invoice-title h2 { margin: 0; color: #2d3748; font-size: 24px; font-weight: 800; text-transform: uppercase; }
+          .invoice-title p { margin: 4px 0; font-size: 14px; font-weight: 600; }
+          
+          .details-grid { display: grid; grid-template-cols: 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+          .detail-section h3 { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: #a0aec0; margin-bottom: 12px; }
+          .detail-card { background: #f7fafc; padding: 16px; rounded: 12px; border: 1px solid #edf2f7; }
+          .detail-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; }
+          .detail-label { color: #718096; }
+          .detail-value { font-weight: 600; color: #2d3748; }
+
+          table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
+          th { background: #f8fafc; text-align: left; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; padding: 12px 8px; border-bottom: 1px solid #e2e8f0; }
+          
+          .summary-box { margin-left: auto; width: 300px; }
+          .summary-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; }
+          .total-row { border-top: 2px solid #2d3748; margin-top: 12px; padding-top: 12px; font-weight: 800; font-size: 20px; color: #e53e3e; }
+          
+          .footer { margin-top: 60px; display: grid; grid-template-cols: 1fr 1fr; text-align: center; font-size: 14px; }
+          .signature-space { height: 80px; }
+          .thank-you { text-align: center; margin-top: 60px; color: #a0aec0; font-style: italic; font-size: 13px; }
+          @media print { body { padding: 20px; } .invoice-box { max-width: 100%; } }
+        </style>
+      </head>
+      <body>
+        <div class="invoice-box">
+          <div class="header">
+            <div style="display: flex; align-items: center; gap: 20px;">
+              <div style="position: relative; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; shrink-0: 0;">
+                <div style="position: absolute; inset: 0; background: #dc2626; border-radius: 16px; transform: rotate(6deg);"></div>
+                <div style="position: absolute; inset: 0; background: #000; border-radius: 16px; transform: rotate(-3deg);"></div>
+                <svg style="position: relative; width: 40px; height: 40px; color: #fff; transform: rotate(-12deg);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+              </div>
+              <div class="shop-info">
+                <h1 style="margin: 0; color: #111; font-size: 28px; font-weight: 800; letter-spacing: -0.05em;">GIÀY<span style="color: #e53e3e;">ĐẸP</span></h1>
+                <p>Địa chỉ: 123 Đường ABC, Quận Cầu Giấy, Hà Nội</p>
+                <p>Hotline: 0123 456 789 - Website: giaydepstore.com</p>
+              </div>
+            </div>
+            <div class="invoice-title">
+              <h2>Hóa đơn</h2>
+              <p>#${order.ma_don_hang}</p>
+              <p style="font-weight: 400; color: #718096;">Ngày: ${new Date(order.ngay_tao).toLocaleDateString("vi-VN")}</p>
+            </div>
+          </div>
+
+          <div class="details-grid">
+            <div class="detail-section">
+              <h3>Khách hàng & Giao hàng</h3>
+              <div class="detail-card">
+                <div class="detail-row"><span class="detail-label">Người nhận:</span> <span class="detail-value">${order.ten_nguoi_nhan}</span></div>
+                <div class="detail-row"><span class="detail-label">SĐT:</span> <span class="detail-value">${order.sdt_nguoi_nhan}</span></div>
+                <div class="detail-row"><span class="detail-label">Địa chỉ:</span> <span class="detail-value" style="text-align: right;">${order.dia_chi_nhan}</span></div>
+              </div>
+            </div>
+            <div class="detail-section">
+              <h3>Thanh toán</h3>
+              <div class="detail-card">
+                <div class="detail-row"><span class="detail-label">Phương thức:</span> <span class="detail-value">${paymentMethodLabels[order.phuong_thuc_thanh_toan] || order.phuong_thuc_thanh_toan}</span></div>
+                <div class="detail-row"><span class="detail-label">Trạng thái:</span> <span class="detail-value">${order.trang_thai_thanh_toan === 'da_thanh_toan' ? 'Đã thanh toán' : 'Chờ thanh toán'}</span></div>
+                <div class="detail-row"><span class="detail-label">Ghi chú:</span> <span class="detail-value">${order.ghi_chu || 'Không có'}</span></div>
+              </div>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 40px; text-align: center;">STT</th>
+                <th>Sản phẩm</th>
+                <th style="width: 60px; text-align: center;">SL</th>
+                <th style="width: 120px; text-align: right;">Đơn giá</th>
+                <th style="width: 120px; text-align: right;">Thành tiền</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${itemsHtml}
+            </tbody>
+          </table>
+
+          <div class="summary-box">
+            <div class="summary-row"><span style="color: #718096;">Tạm tính:</span> <span>${formatPrice(order.tong_tien)}</span></div>
+            <div class="summary-row"><span style="color: #718096;">Giảm giá:</span> <span style="color: #e53e3e;">-${formatPrice(order.tien_giam_gia)}</span></div>
+            <div class="summary-row"><span style="color: #718096;">Vận chuyển:</span> <span>+${formatPrice(order.phi_van_chuyen)}</span></div>
+            <div class="summary-row total-row"><span>TỔNG CỘNG:</span> <span>${formatPrice(order.thanh_tien)}</span></div>
+          </div>
+
+          <div class="footer">
+            <div>
+              <p style="font-weight: 600; margin-bottom: 8px;">Người mua hàng</p>
+              <p style="font-size: 11px; color: #718096; margin-bottom: 20px;">(Ký và ghi rõ họ tên)</p>
+              <div class="signature-space"></div>
+            </div>
+            <div>
+              <p style="font-weight: 600; margin-bottom: 8px;">Người bán hàng</p>
+              <p style="font-size: 11px; color: #718096; margin-bottom: 20px;">(Ký và đóng dấu)</p>
+              <div class="signature-space"></div>
+            </div>
+          </div>
+
+          <div class="thank-you">
+            Cảm ơn quý khách đã mua sắm tại Giày Đẹp Store!
+          </div>
+        </div>
+      </body>
+    </html>
+  `)
   printWindow.document.close()
   setTimeout(() => {
     printWindow.print()
@@ -217,6 +351,29 @@ const paymentMethodLabels = {
   tien_mat: 'Tiền mặt'
 }
 
+const actionLabels = {
+  ORDER_CREATE: 'Đặt hàng thành công',
+  ORDER_STATUS_UPDATE: 'Cập nhật trạng thái',
+  ORDER_CANCEL: 'Hủy đơn hàng',
+  PAYMENT_CONFIRM: 'Xác nhận thanh toán',
+  cho_xu_ly: 'Chờ xử lý',
+  da_xac_nhan: 'Đã xác nhận',
+  dang_giao: 'Đang giao',
+  da_giao: 'Đã giao',
+  da_huy: 'Đã hủy'
+}
+
+function getActionLabel(log) {
+  if (log.hanh_dong === 'ORDER_STATUS_UPDATE') {
+    const desc = log.mo_ta.toLowerCase()
+    if (desc.includes('đang được giao') || desc.includes('đang giao')) return 'Đang giao'
+    if (desc.includes('đã giao thành công') || desc.includes('đã giao')) return 'Đã giao'
+    if (desc.includes('đã được xác nhận') || desc.includes('đã xác nhận')) return 'Đã xác nhận'
+    if (desc.includes('đã hủy') || desc.includes('đã bị hủy')) return 'Đã hủy'
+  }
+  return actionLabels[log.hanh_dong] || log.hanh_dong
+}
+
 function formatPrice(p) { return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(p) }
 function formatDate(d) { return new Date(d).toLocaleDateString('vi-VN') }
 function formatDateFull(d) { return new Intl.DateTimeFormat('vi-VN', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(d)) }
@@ -242,7 +399,17 @@ async function viewDetail(order) {
 
 async function updateStatus(id, trang_thai) {
   try {
-    await api.put(`/orders/${id}/status`, { trang_thai })
+    let ghi_chu = null
+    if (trang_thai === 'da_huy') {
+      ghi_chu = prompt('Vui lòng nhập lý do hủy đơn hàng:')
+      if (ghi_chu === null) return // User cancelled prompt
+      if (!ghi_chu.trim()) {
+        showError('Phải nhập lý do hủy')
+        return
+      }
+    }
+
+    await api.put(`/orders/${id}/status`, { trang_thai, ghi_chu })
     success('Đã cập nhật trạng thái')
     fetchOrders()
     if (selectedOrder.value && selectedOrder.value.id === id) {
