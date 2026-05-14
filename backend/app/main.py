@@ -5,7 +5,7 @@ from app.configs.config import settings
 from app.configs.database import engine, Base
 from app.models import *  # noqa: F401, F403 - import all models to register them
 
-from app.routers import auth, users, products, categories, orders, cart, wishlists, reviews, coupons, payments, dashboard, logs, banks, payment_methods, addresses
+from app.routers import auth, users, products, categories, orders, cart, wishlists, reviews, coupons, payments, dashboard, logs, banks, payment_methods, addresses, chatbot
 
 # Create all tables
 Base.metadata.create_all(bind=engine)
@@ -41,6 +41,7 @@ app.include_router(logs)
 app.include_router(banks)
 app.include_router(payment_methods)
 app.include_router(addresses)
+app.include_router(chatbot.router)
 
 
 @app.get("/")
@@ -158,3 +159,4 @@ def create_default_admin():
             print("✅ Đã tạo tài khoản admin mặc định: admin@qlbg.com / admin123")
     finally:
         db.close()
+

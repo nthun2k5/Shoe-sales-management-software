@@ -23,6 +23,7 @@ Dự án sử dụng bộ công cụ hiện đại (Modern Full-stack) nhằm đ
 -   **Password Hashing:** [Bcrypt](https://pypi.org/project/bcrypt/) - Mã hóa mật khẩu an toàn theo tiêu chuẩn ngành.
 -   **Validation:** [Pydantic v2](https://docs.pydantic.dev/) - Xác thực dữ liệu đầu vào và định dạng phản hồi API.
 -   **Migrations:** [Aembic](https://alembic.sqlalchemy.org/) - Quản lý lịch sử thay đổi cấu trúc database.
+-   **AI Integration:** [Google Gemini AI](https://ai.google.dev/) - Trí tuệ nhân tạo hỗ trợ tư vấn sản phẩm và tìm kiếm thông minh.
 
 ## 📐 Kiến trúc hệ thống
 

@@ -28,6 +28,7 @@
 - **Mua sắm thông minh**: Bộ lọc sản phẩm đa năng (theo giá, danh mục, kích thước), tìm kiếm thời gian thực.
 - **Giỏ hàng & Thanh toán**: Quy trình thanh toán tinh gọn, áp dụng mã giảm giá tự động, quản lý Wishlist.
 - **Tương tác**: Đánh giá sản phẩm sau khi mua, theo dõi trạng thái đơn hàng (Chờ xử lý, Đang giao, Thành công).
+- **AI Tư vấn Thông minh (Mới)**: Chatbot tích hợp Google Gemini giúp tư vấn sản phẩm bằng ngôn ngữ tự nhiên, tìm kiếm thông minh không dấu và hỗ trợ khách hàng 24/7.
 
 ### 🛠️ Cho Quản trị viên (Admin)
 - **Dashboard Toàn diện**: Biểu đồ thống kê doanh thu, số lượng khách hàng và đơn hàng mới.
@@ -49,6 +50,7 @@
 | **Giao diện** | Vue 3 (Composition API), Vite, Pinia, Tailwind CSS v4, AOS |
 | **Xử lý** | FastAPI (Python), Pydantic v2, SQLAlchemy |
 | **Cơ sở dữ liệu** | PostgreSQL, Alembic (Migrations) |
+| **AI (Chatbot)** | Google Gemini AI (gemini-flash-latest), google-genai SDK |
 | **Tiện ích** | Chart.js (Biểu đồ), XLSX (Xuất Excel), Axios (HTTP Client) |
 
 ## 🚀 Hướng dẫn khởi chạy
@@ -106,6 +108,7 @@ npm run dev
 - **Smart Shopping**: Versatile product filters (price, category, size), real-time search.
 - **Cart & Checkout**: Streamlined checkout process, automated coupon application, Wishlist management.
 - **Interaction**: Product reviews, order status tracking (Pending, Shipping, Completed).
+- **AI Smart Consultant (New)**: Integrated Google Gemini chatbot for natural language product advice, smart unaccented search, and 24/7 customer support.
 
 ### 🛠️ For Administrators (Admin)
 - **Comprehensive Dashboard**: Visual analytics for revenue, customer count, and new orders.
@@ -127,6 +130,7 @@ npm run dev
 | **Frontend** | Vue 3 (Composition API), Vite, Pinia, Tailwind CSS v4, AOS |
 | **Backend** | FastAPI (Python), Pydantic v2, SQLAlchemy |
 | **Database** | PostgreSQL, Alembic (Migrations) |
+| **AI (Chatbot)** | Google Gemini AI (gemini-flash-latest), google-genai SDK |
 | **Utilities** | Chart.js (Analytics), XLSX (Excel Export), Axios (HTTP Client) |
 
 ## 🚀 Quick Start

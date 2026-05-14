@@ -42,6 +42,6 @@ Dự án cung cấp một hệ thống quản lý bán hàng giày dép đầy �
 
 ## 🌟 3. Tính năng UX Cao cấp
 - **Top Announcement**: Thanh thông báo trượt tự động các chương trình ưu đãi.
-- **Live Chat Support**: Giả lập chat hỗ trợ trực tuyến 24/7.
+- **AI Chatbot Consultant**: Trợ lý ảo thông minh tích hợp Gemini AI, hỗ trợ tư vấn sản phẩm, tìm kiếm thông minh và giải đáp thắc mắc 24/7.
 - **Responsive Design**: Tương thích hoàn hảo trên Mobile, Tablet và Desktop.
 - **Export Data**: Xuất báo cáo Excel chuyên nghiệp.

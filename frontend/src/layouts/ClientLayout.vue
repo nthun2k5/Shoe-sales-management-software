@@ -405,75 +405,150 @@
       </button>
     </div>
 
-    <!-- Chat Window -->
     <Teleport to="body">
-      <Transition name="chat-window">
-        <div v-if="chatOpen"
-          class="fixed bottom-28 right-6 z-50 w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col"
-          style="max-height: 420px;">
-          <!-- Header -->
-          <div class="bg-red-600 px-4 py-4 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center shrink-0">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-              </svg>
-            </div>
-            <div class="flex-1">
-              <p class="text-white font-bold text-sm">Giày Đẹp Support</p>
-              <div class="flex items-center gap-1.5 mt-0.5">
-                <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                <span class="text-white/80 text-xs">Đang hoạt động</span>
-              </div>
-            </div>
-            <button @click="chatOpen = false" class="text-white/70 hover:text-white transition-colors">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
+  <Transition name="chat-window">
+    <div v-if="chatOpen"
+      class="fixed bottom-28 right-6 z-50 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col"
+      style="max-height: 500px; height: 500px;">
+      
+      <!-- Header với gradient và hiệu ứng -->
+      <div class="bg-gradient-to-r from-red-600 to-red-700 px-4 py-4 flex items-center gap-3">
+        <div class="relative">
+          <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center shrink-0 backdrop-blur-sm">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+            </svg>
           </div>
-          <!-- Messages -->
-          <div class="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50">
-            <div class="flex items-end gap-2">
-              <div class="w-7 h-7 rounded-full bg-red-100 flex items-center justify-center shrink-0">
-                <span class="text-xs">👟</span>
-              </div>
-              <div class="bg-white rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm max-w-[80%]">
-                <p class="text-sm text-gray-800">Xin chào! Tôi có thể giúp gì cho bạn? 😊</p>
-                <p class="text-[10px] text-gray-400 mt-1">Giày Đẹp • Vừa xong</p>
-              </div>
-            </div>
-            <div class="flex items-end gap-2">
-              <div class="w-7 h-7 rounded-full bg-red-100 flex items-center justify-center shrink-0">
-                <span class="text-xs">👟</span>
-              </div>
-              <div class="bg-white rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm max-w-[80%]">
-                <p class="text-sm text-gray-800">Bạn có thể hỏi về sản phẩm, size giày, hoặc đơn hàng nhé!</p>
-                <p class="text-[10px] text-gray-400 mt-1">Giày Đẹp • Vừa xong</p>
-              </div>
-            </div>
-            <!-- Quick replies -->
-            <div class="flex flex-wrap gap-2 pt-1">
-              <button v-for="q in quickReplies" :key="q" @click="sendQuickReply(q)"
-                class="px-3 py-1.5 bg-red-50 text-red-600 text-xs font-bold rounded-full border border-red-100 hover:bg-red-100 transition-colors">
-                {{ q }}
-              </button>
-            </div>
-          </div>
-          <!-- Input -->
-          <div class="p-3 border-t border-gray-100 flex gap-2">
-            <input v-model="chatMessage" @keyup.enter="sendChat"
-              type="text" placeholder="Nhập tin nhắn..."
-              class="flex-1 px-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-red-400 transition-colors" />
-            <button @click="sendChat"
-              class="w-9 h-9 bg-red-600 text-white rounded-xl flex items-center justify-center hover:bg-red-700 transition-colors">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
-              </svg>
-            </button>
+          <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-white rounded-full"></span>
+        </div>
+        <div class="flex-1">
+          <p class="text-white font-bold text-sm">Giày Đẹp Support</p>
+          <div class="flex items-center gap-1.5 mt-0.5">
+            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+            <span class="text-white/80 text-xs">Phản hồi trong 5 phút</span>
           </div>
         </div>
-      </Transition>
-    </Teleport>
+        <button @click="chatOpen = false" class="text-white/70 hover:text-white transition-all hover:scale-110">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Messages với custom scrollbar đẹp -->
+      <div class="flex-1 overflow-y-auto p-4 space-y-3 bg-gradient-to-b from-gray-50 to-white" id="chat-messages-container">
+        <div v-for="(msg, idx) in chatMessages" :key="idx" :class="['flex items-end gap-2 animate-fade-in', msg.type === 'user' ? 'flex-row-reverse' : '']">
+          <!-- Avatar bot -->
+          <div v-if="msg.type === 'bot'" class="w-7 h-7 rounded-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center shrink-0 shadow-md">
+            <span class="text-xs">🤖</span>
+          </div>
+          
+          <!-- Message bubble -->
+          <div :class="[
+              'px-4 py-2.5 shadow-sm max-w-[85%] break-words', 
+              msg.type === 'user' 
+                ? 'bg-gradient-to-r from-red-600 to-red-500 text-white rounded-2xl rounded-br-sm' 
+                : 'bg-white text-gray-800 rounded-2xl rounded-bl-sm border border-gray-100'
+            ]">
+            <p class="text-sm leading-relaxed">{{ msg.text }}</p>
+            <p :class="['text-[10px] mt-1 font-medium', msg.type === 'user' ? 'text-red-100 text-right' : 'text-gray-400']">
+              {{ msg.type === 'bot' ? 'Giày Đẹp' : 'Bạn' }} • {{ msg.time }}
+            </p>
+          </div>
+        </div>
+        
+        <!-- Loading indicator với animation -->
+        <div v-if="isChatLoading" class="flex items-end gap-2 animate-fade-in">
+          <div class="w-7 h-7 rounded-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center shrink-0 shadow-md">
+            <span class="text-xs">🤖</span>
+          </div>
+          <div class="bg-white rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm">
+            <div class="flex gap-1.5">
+              <span class="w-2 h-2 bg-red-400 rounded-full animate-bounce" style="animation-delay: 0s"></span>
+              <span class="w-2 h-2 bg-red-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
+              <span class="w-2 h-2 bg-red-400 rounded-full animate-bounce" style="animation-delay: 0.4s"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick replies với thiết kế mới -->
+        <div class="flex flex-wrap gap-2 pt-2 border-t border-gray-200 mt-2">
+          <button v-for="q in quickReplies" :key="q" @click="sendQuickReply(q)"
+            class="px-3 py-1.5 bg-white text-red-600 text-xs font-semibold rounded-full border border-red-200 shadow-sm hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-200 hover:shadow-md transform hover:-translate-y-0.5">
+            {{ q }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Input area với thiết kế nổi bật -->
+      <div class="p-3 bg-white border-t border-gray-200">
+        <div class="flex gap-2 items-center">
+          <input v-model="chatMessage" @keyup.enter="sendChat"
+            type="text" 
+            placeholder="Nhập tin nhắn..."
+            class="flex-1 px-4 py-2.5 text-sm border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-red-200 focus:border-red-400 transition-all bg-gray-50 hover:bg-white" />
+          <button @click="sendChat"
+            class="w-10 h-10 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-full flex items-center justify-center hover:from-red-700 hover:to-red-600 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </Transition>
+</Teleport>
   </div>
 </template>
+
+<style scoped>
+/* Custom scrollbar */
+#chat-messages-container::-webkit-scrollbar {
+  width: 5px;
+}
+
+#chat-messages-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+#chat-messages-container::-webkit-scrollbar-thumb {
+  background: #e5e7eb;
+  border-radius: 10px;
+}
+
+#chat-messages-container::-webkit-scrollbar-thumb:hover {
+  background: #dc2626;
+}
+
+/* Animation fade in cho messages */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+/* Transition cho chat window */
+.chat-window-enter-active,
+.chat-window-leave-active {
+  transition: all 0.2s ease-out;
+}
+
+.chat-window-enter-from,
+.chat-window-leave-to {
+  opacity: 0;
+  transform: scale(0.95) translateY(10px);
+}
+</style>
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
@@ -511,6 +586,10 @@ const isScrolled = ref(false)
 const chatOpen = ref(false)
 const showChatTip = ref(false)
 const chatMessage = ref('')
+const chatMessages = ref([
+  { type: 'bot', text: 'Xin chào! Tôi là trợ lý ảo tư vấn sản phẩm. Tôi có thể giúp bạn tìm giày theo yêu cầu nhé! 😊', time: new Date().toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'}) }
+])
+const isChatLoading = ref(false)
 
 const announcements = [
   { icon: '🚚', text: 'Miễn phí vận chuyển cho đơn hàng từ 500K' },
@@ -527,11 +606,37 @@ function openChat() {
   showChatTip.value = false
 }
 
-function sendChat() {
-  if (!chatMessage.value.trim()) return
+async function sendChat() {
+  const msg = chatMessage.value.trim()
+  if (!msg || isChatLoading.value) return
 
-  // Demo: gửi xong thì giữ chat mở và chỉ xóa input để người dùng thấy tác vụ đã nhận
+  chatMessages.value.push({ type: 'user', text: msg, time: new Date().toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'}) })
   chatMessage.value = ''
+  isChatLoading.value = true
+
+  // Cuộn xuống cuối
+  setTimeout(() => {
+    const el = document.getElementById('chat-messages-container')
+    if(el) el.scrollTop = el.scrollHeight
+  }, 100)
+
+  try {
+    const res = await fetch('http://localhost:8000/api/chatbot/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: msg })
+    })
+    const data = await res.json()
+    chatMessages.value.push({ type: 'bot', text: data.reply || "Xin lỗi, không có phản hồi từ máy chủ.", time: new Date().toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'}) })
+  } catch (error) {
+    chatMessages.value.push({ type: 'bot', text: 'Lỗi kết nối đến máy chủ. Vui lòng thử lại sau.', time: new Date().toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'}) })
+  } finally {
+    isChatLoading.value = false
+    setTimeout(() => {
+      const el = document.getElementById('chat-messages-container')
+      if(el) el.scrollTop = el.scrollHeight
+    }, 100)
+  }
 }
 
 function sendQuickReply(q) {
