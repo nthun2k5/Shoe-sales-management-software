@@ -1,0 +1,195 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64)">
+  <diagram id="seq-order" name="Sequence order">
+    <mxGraphModel dx="1239" dy="691" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1050" pageHeight="750" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Customer" parent="1" style="shape=umlLifeline;participant=umlActor;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;fillColor=#edf2f7;strokeColor=#4a5568;strokeWidth=2;fontColor=#2d3748;fontStyle=1;" value="Customer" vertex="1">
+          <mxGeometry height="680" width="30" x="80" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Frontend" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontColor=#2d3748;fontStyle=1;" value="Frontend&lt;br/&gt;(Vue 3)" vertex="1">
+          <mxGeometry height="680" width="100" x="280" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act_Frontend_0" parent="Frontend" style="html=1;points=[];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#4a5568;strokeWidth=1.5;" value="" vertex="1">
+          <mxGeometry height="520" width="10" x="45" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Middleware" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;fontColor=#2d3748;fontStyle=1;" value="Middleware&lt;br/&gt;(FastAPI)" vertex="1">
+          <mxGeometry height="680" width="100" x="480" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act_Middleware_1" parent="Middleware" style="html=1;points=[];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#4a5568;strokeWidth=1.5;" value="" vertex="1">
+          <mxGeometry height="390" width="10" x="45" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="OrderService" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;fontColor=#2d3748;fontStyle=1;" value="OrderService" vertex="1">
+          <mxGeometry height="680" width="100" x="680" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act_OrderService_2" parent="OrderService" style="html=1;points=[];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#4a5568;strokeWidth=1.5;" value="" vertex="1">
+          <mxGeometry height="320" width="10" x="45" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="Database" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontColor=#2d3748;fontStyle=1;" value="Database&lt;br/&gt;(PostgreSQL)" vertex="1">
+          <mxGeometry height="680" width="100" x="880" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act_Database_3" parent="Database" style="html=1;points=[];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#4a5568;strokeWidth=1.5;" value="" vertex="1">
+          <mxGeometry height="40" width="10" x="45" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="act_Database_4" parent="Database" style="html=1;points=[];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#4a5568;strokeWidth=1.5;" value="" vertex="1">
+          <mxGeometry height="150" width="10" x="45" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="msg_0" edge="1" parent="1" source="Customer" style="endArrow=block;html=1;rounded=0;strokeColor=#4a5568;strokeWidth=1.5;fontSize=10;fontColor=#2d3748;" target="Frontend">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="130" y="100" />
+              <mxPoint x="330" y="100" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_msg_0" connectable="0" parent="msg_0" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];whiteSpace=wrap;html=1;" value="1. Click Đặt hàng" vertex="1">
+          <mxGeometry relative="1" y="-12" as="geometry" />
+        </mxCell>
+        <mxCell id="msg_1" edge="1" parent="1" source="Frontend" style="endArrow=block;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;curved=0;strokeColor=#4a5568;strokeWidth=1.5;fontSize=10;fontColor=#2d3748;" target="Frontend">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="360" y="130" />
+              <mxPoint x="360" y="160" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_msg_1" connectable="0" parent="msg_1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];whiteSpace=wrap;html=1;" value="2. Validate Client-side" vertex="1">
+          <mxGeometry relative="1" x="1" as="geometry" />
+        </mxCell>
+        <mxCell id="msg_2" edge="1" parent="1" source="Frontend" style="endArrow=block;html=1;rounded=0;strokeColor=#4a5568;strokeWidth=1.5;fontSize=10;fontColor=#2d3748;" target="Middleware">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="330" y="190" />
+              <mxPoint x="530" y="190" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_msg_2" connectable="0" parent="msg_2" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];whiteSpace=wrap;html=1;" value="3. POST /api/orders (payload)" vertex="1">
+          <mxGeometry relative="1" y="-12" as="geometry" />
+        </mxCell>
+        <mxCell id="msg_3" edge="1" parent="1" source="Middleware" style="endArrow=block;html=1;rounded=0;strokeColor=#4a5568;strokeWidth=1.5;fontSize=10;fontColor=#2d3748;" target="OrderService">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="530" y="220" />
+              <mxPoint x="730" y="220" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_msg_3" connectable="0" parent="msg_3" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];whiteSpace=wrap;html=1;" value="4. create_order(data)" vertex="1">
+          <mxGeometry relative="1" y="-12" as="geometry" />
+        </mxCell>
+        <mxCell id="msg_4" edge="1" parent="1" source="OrderService" style="endArrow=block;html=1;rounded=0;strokeColor=#4a5568;strokeWidth=1.5;fontSize=10;fontColor=#2d3748;" target="Database">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="730" y="250" />
+              <mxPoint x="930" y="250" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_msg_4" connectable="0" parent="msg_4" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];whiteSpace=wrap;html=1;" value="5. SELECT stock FROM product" vertex="1">
+          <mxGeometry relative="1" y="-12" as="geometry">
+            <mxPoint y="-12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg_5" edge="1" parent="1" source="Database" style="endArrow=open;dashed=1;html=1;rounded=0;endFill=0;strokeColor=#718096;strokeWidth=1.2;fontSize=10;fontColor=#4a5568;" target="OrderService">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="930" y="290" />
+              <mxPoint x="730" y="290" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_msg_5" connectable="0" parent="msg_5" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];whiteSpace=wrap;html=1;" value="6. stock_data" vertex="1">
+          <mxGeometry relative="1" y="-12" as="geometry">
+            <mxPoint y="12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg_6" edge="1" parent="1" source="OrderService" style="endArrow=block;html=1;rounded=0;strokeColor=#4a5568;strokeWidth=1.5;fontSize=10;fontColor=#2d3748;" target="Database">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="730" y="340" />
+              <mxPoint x="930" y="340" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_msg_6" connectable="0" parent="msg_6" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];whiteSpace=wrap;html=1;" value="7. INSERT INTO orders &amp; order_items" vertex="1">
+          <mxGeometry relative="1" y="-12" as="geometry">
+            <mxPoint y="-12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg_7" edge="1" parent="1" source="Database" style="endArrow=open;dashed=1;html=1;rounded=0;endFill=0;strokeColor=#718096;strokeWidth=1.2;fontSize=10;fontColor=#4a5568;" target="OrderService">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="930" y="390" />
+              <mxPoint x="730" y="390" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_msg_7" connectable="0" parent="msg_7" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];whiteSpace=wrap;html=1;" value="8. insert_success" vertex="1">
+          <mxGeometry relative="1" y="-12" as="geometry">
+            <mxPoint y="12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg_8" edge="1" parent="1" source="OrderService" style="endArrow=block;html=1;rounded=0;strokeColor=#4a5568;strokeWidth=1.5;fontSize=10;fontColor=#2d3748;" target="Database">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="730" y="440" />
+              <mxPoint x="930" y="440" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_msg_8" connectable="0" parent="msg_8" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];whiteSpace=wrap;html=1;" value="9. COMMIT transaction" vertex="1">
+          <mxGeometry relative="1" y="-12" as="geometry">
+            <mxPoint y="-17" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg_9" edge="1" parent="1" source="Database" style="endArrow=open;dashed=1;html=1;rounded=0;endFill=0;strokeColor=#718096;strokeWidth=1.2;fontSize=10;fontColor=#4a5568;" target="OrderService">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="930" y="490" />
+              <mxPoint x="730" y="490" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_msg_9" connectable="0" parent="msg_9" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];whiteSpace=wrap;html=1;" value="10. commit_success" vertex="1">
+          <mxGeometry relative="1" y="-12" as="geometry">
+            <mxPoint y="12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg_10" edge="1" parent="1" source="OrderService" style="endArrow=open;dashed=1;html=1;rounded=0;endFill=0;strokeColor=#718096;strokeWidth=1.2;fontSize=10;fontColor=#4a5568;" target="Middleware">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="730" y="540" />
+              <mxPoint x="530" y="540" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_msg_10" connectable="0" parent="msg_10" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];whiteSpace=wrap;html=1;" value="11. order_response" vertex="1">
+          <mxGeometry relative="1" y="-12" as="geometry" />
+        </mxCell>
+        <mxCell id="msg_11" edge="1" parent="1" source="Middleware" style="endArrow=open;dashed=1;html=1;rounded=0;endFill=0;strokeColor=#718096;strokeWidth=1.2;fontSize=10;fontColor=#4a5568;" target="Frontend">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="530" y="580" />
+              <mxPoint x="330" y="580" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_msg_11" connectable="0" parent="msg_11" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];whiteSpace=wrap;html=1;" value="12. HTTP 201 Created (JSON)" vertex="1">
+          <mxGeometry relative="1" y="-12" as="geometry" />
+        </mxCell>
+        <mxCell id="msg_12" edge="1" parent="1" source="Frontend" style="endArrow=open;dashed=1;html=1;rounded=0;endFill=0;strokeColor=#718096;strokeWidth=1.2;fontSize=10;fontColor=#4a5568;" target="Customer">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="330" y="620" />
+              <mxPoint x="130" y="620" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_msg_12" connectable="0" parent="msg_12" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];whiteSpace=wrap;html=1;" value="13. Hiển thị thông báo thành công" vertex="1">
+          <mxGeometry relative="1" y="-12" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

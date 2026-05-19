@@ -1,0 +1,275 @@
+
+<style>
+#erd { padding: 8px 0; overflow-x: auto; }
+#erd svg { min-width: 1400px; font-size: 15px !important; }
+</style>
+<div id="erd"></div>
+<script type="module">
+import mermaid from 'https://esm.sh/mermaid@11/dist/mermaid.esm.min.mjs';
+const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+await document.fonts.ready;
+mermaid.initialize({
+  startOnLoad: false,
+  theme: 'base',
+  fontFamily: '"Anthropic Sans", sans-serif',
+  er: { diagramPadding: 40, layoutDirection: 'LR', minEntityWidth: 200, minEntityHeight: 40, entityPadding: 20, useMaxWidth: false },
+  themeVariables: {
+    darkMode: dark,
+    fontSize: '15px',
+    fontFamily: '"Anthropic Sans", sans-serif',
+    lineColor: dark ? '#9c9a92' : '#73726c',
+    textColor: dark ? '#c2c0b6' : '#3d3d3a',
+    primaryColor: dark ? '#2a2840' : '#eeedfe',
+    primaryBorderColor: dark ? '#534AB7' : '#534AB7',
+    primaryTextColor: dark ? '#c2c0b6' : '#26215C',
+    secondaryColor: dark ? '#1a3a2e' : '#e1f5ee',
+    secondaryBorderColor: dark ? '#0F6E56' : '#0F6E56',
+    tertiaryColor: dark ? '#3a1e14' : '#faece7',
+    tertiaryBorderColor: dark ? '#993C1D' : '#993C1D',
+  },
+});
+
+const diagram = `erDiagram
+  nguoi_dung {
+    int id PK
+    string email
+    string mat_khau_hash
+    string ho_ten
+    string so_dien_thoai
+    text dia_chi
+    string vai_tro
+    text anh_dai_dien
+    bool dang_hoat_dong
+    datetime ngay_tao
+    datetime ngay_cap_nhat
+  }
+
+  dia_chi_giao_hang {
+    int id PK
+    int id_nguoi_dung FK
+    string ten_nguoi_nhan
+    string so_dien_thoai
+    text dia_chi
+    bool la_mac_dinh
+  }
+
+  danh_muc {
+    int id PK
+    string ten
+    string slug
+    text mo_ta
+    text anh
+    int id_cha FK
+    bool dang_hoat_dong
+    datetime ngay_tao
+    datetime ngay_cap_nhat
+  }
+
+  san_pham {
+    int id PK
+    string ten
+    string slug
+    text mo_ta
+    string mo_ta_ngan
+    float gia
+    float gia_khuyen_mai
+    int so_luong_ton
+    string ma_sku
+    int id_danh_muc FK
+    string thuong_hieu
+    bool dang_hoat_dong
+    bool la_noi_bat
+    string cac_kich_thuoc
+    datetime ngay_tao
+    datetime ngay_cap_nhat
+  }
+
+  anh_san_pham {
+    int id PK
+    int id_san_pham FK
+    text du_lieu_anh
+    bool la_anh_chinh
+    int thu_tu_sap_xep
+  }
+
+  don_hang {
+    int id PK
+    int id_nguoi_dung FK
+    string ma_don_hang
+    float tong_tien
+    float tien_giam_gia
+    float phi_van_chuyen
+    float thanh_tien
+    string trang_thai
+    string phuong_thuc_thanh_toan
+    string trang_thai_thanh_toan
+    string ten_nguoi_nhan
+    string sdt_nguoi_nhan
+    text dia_chi_nhan
+    text ghi_chu
+    datetime ngay_tao
+    datetime ngay_cap_nhat
+  }
+
+  chi_tiet_don_hang {
+    int id PK
+    int id_don_hang FK
+    int id_san_pham FK
+    string kich_thuoc
+    int so_luong
+    float don_gia
+    float thanh_tien
+  }
+
+  gio_hang {
+    int id PK
+    int id_nguoi_dung FK
+    int id_san_pham FK
+    string kich_thuoc
+    int so_luong
+    datetime ngay_tao
+    datetime ngay_cap_nhat
+  }
+
+  danh_sach_yeu_thich {
+    int id PK
+    int id_nguoi_dung FK
+    int id_san_pham FK
+    datetime ngay_tao
+  }
+
+  danh_gia {
+    int id PK
+    int id_nguoi_dung FK
+    int id_san_pham FK
+    int diem_danh_gia
+    text binh_luan
+    datetime ngay_tao
+  }
+
+  ma_giam_gia {
+    int id PK
+    string ma
+    string loai_giam_gia
+    float gia_tri_giam
+    float gia_tri_don_toi_thieu
+    int so_lan_su_dung_toi_da
+    int so_lan_da_su_dung
+    datetime ngay_bat_dau
+    datetime ngay_ket_thuc
+    bool dang_hoat_dong
+    datetime ngay_tao
+  }
+
+  su_dung_ma_giam_gia {
+    int id PK
+    int id_nguoi_dung FK
+    int id_ma_giam_gia FK
+    datetime ngay_su_dung
+  }
+
+  thanh_toan {
+    int id PK
+    int id_don_hang FK
+    string phuong_thuc
+    float so_tien
+    string trang_thai
+    string ma_giao_dich
+    datetime thoi_diem_thanh_toan
+    datetime ngay_tao
+  }
+
+  phuong_thuc_thanh_toan {
+    int id PK
+    string ma_phuong_thuc
+    string ten_phuong_thuc
+    string mo_ta
+    string icon_svg
+    string anh_logo
+    bool kich_hoat
+    bool ho_tro_qr
+    string loai
+    int thu_tu
+    int phi_co_dinh
+    int phi_phan_tram
+    int gia_tri_don_toi_thieu
+    int gia_tri_don_toi_da
+    text cau_hinh_json
+    datetime ngay_tao
+    datetime ngay_cap_nhat
+  }
+
+  nhat_ky {
+    int id PK
+    int nguoi_dung_id FK
+    string hanh_dong
+    text mo_ta
+    string ip_address
+    int id_don_hang
+    datetime ngay_tao
+  }
+
+  thong_tin_ngan_hang {
+    int id PK
+    string loai
+    string ten_ngan_hang
+    string ma_ngan_hang
+    string chu_tai_khoan
+    string so_tai_khoan
+    string so_dien_thoai
+    string chi_nhanh
+    bool dang_su_dung
+    datetime ngay_tao
+    datetime ngay_cap_nhat
+  }
+
+  nguoi_dung ||--o{ dia_chi_giao_hang : "co"
+  nguoi_dung ||--o{ don_hang : "dat"
+  nguoi_dung ||--o{ gio_hang : "them vao"
+  nguoi_dung ||--o{ danh_sach_yeu_thich : "yeu thich"
+  nguoi_dung ||--o{ danh_gia : "viet"
+  nguoi_dung ||--o{ su_dung_ma_giam_gia : "su dung"
+  nguoi_dung ||--o{ nhat_ky : "tao ra"
+
+  danh_muc ||--o{ san_pham : "chua"
+  danh_muc ||--o{ danh_muc : "cha-con"
+
+  san_pham ||--o{ anh_san_pham : "co"
+  san_pham ||--o{ chi_tiet_don_hang : "xuat hien"
+  san_pham ||--o{ gio_hang : "trong"
+  san_pham ||--o{ danh_sach_yeu_thich : "duoc yeu thich"
+  san_pham ||--o{ danh_gia : "nhan duoc"
+
+  don_hang ||--o{ chi_tiet_don_hang : "gom"
+  don_hang ||--|| thanh_toan : "co"
+
+  ma_giam_gia ||--o{ su_dung_ma_giam_gia : "duoc dung"
+`;
+
+const { svg } = await mermaid.render('erd-svg', diagram);
+document.getElementById('erd').innerHTML = svg;
+
+document.querySelectorAll('#erd svg .node').forEach(node => {
+  const firstPath = node.querySelector('path[d]');
+  if (!firstPath) return;
+  const d = firstPath.getAttribute('d');
+  const nums = d.match(/-?[\d.]+/g)?.map(Number);
+  if (!nums || nums.length < 8) return;
+  const xs = [nums[0], nums[2], nums[4], nums[6]];
+  const ys = [nums[1], nums[3], nums[5], nums[7]];
+  const x = Math.min(...xs), y = Math.min(...ys);
+  const w = Math.max(...xs) - x, h = Math.max(...ys) - y;
+  const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  rect.setAttribute('x', x); rect.setAttribute('y', y);
+  rect.setAttribute('width', w); rect.setAttribute('height', h);
+  rect.setAttribute('rx', '8');
+  for (const a of ['fill', 'stroke', 'stroke-width', 'class', 'style']) {
+    if (firstPath.hasAttribute(a)) rect.setAttribute(a, firstPath.getAttribute(a));
+  }
+  firstPath.replaceWith(rect);
+});
+
+document.querySelectorAll('#erd svg .row-rect-odd path, #erd svg .row-rect-even path').forEach(p => {
+  p.setAttribute('stroke', 'none');
+});
+</script>

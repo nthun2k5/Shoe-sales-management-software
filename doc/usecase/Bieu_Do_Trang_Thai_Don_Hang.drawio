@@ -1,0 +1,95 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64)">
+  <diagram id="state-diagram-v2" name="Order State Diagram">
+    <mxGraphModel dx="1239" dy="691" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1050" pageHeight="450" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="start" parent="1" style="ellipse;html=1;aspect=fixed;fillColor=#2d3748;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="24" width="24" x="150" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="CHO_XU_LY" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f7fafc;strokeColor=#cbd5e0;strokeWidth=2;fontColor=#2d3748;fontStyle=1;align=center;verticalAlign=middle;fontSize=12;" value="CHO_XU_LY" vertex="1">
+          <mxGeometry height="60" width="120" x="220" y="82" as="geometry" />
+        </mxCell>
+        <mxCell id="DANG_GIAO" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f7fafc;strokeColor=#cbd5e0;strokeWidth=2;fontColor=#2d3748;fontStyle=1;align=center;verticalAlign=middle;fontSize=12;" value="DANG_GIAO" vertex="1">
+          <mxGeometry height="60" width="120" x="420" y="82" as="geometry" />
+        </mxCell>
+        <mxCell id="DA_GIAO" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f7fafc;strokeColor=#cbd5e0;strokeWidth=2;fontColor=#2d3748;fontStyle=1;align=center;verticalAlign=middle;fontSize=12;" value="DA_GIAO" vertex="1">
+          <mxGeometry height="60" width="120" x="660" y="82" as="geometry" />
+        </mxCell>
+        <mxCell id="HOAN_THANH" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0fff4;strokeColor=#38a169;strokeWidth=2;fontColor=#22543d;fontStyle=1;align=center;verticalAlign=middle;fontSize=12;" value="HOAN_THANH" vertex="1">
+          <mxGeometry height="60" width="120" x="870" y="82" as="geometry" />
+        </mxCell>
+        <mxCell id="HUY_DON" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff5f5;strokeColor=#e53e3e;strokeWidth=2;fontColor=#742a2a;fontStyle=1;align=center;verticalAlign=middle;fontSize=12;" value="HUY_DON" vertex="1">
+          <mxGeometry height="60" width="120" x="280" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="end" parent="1" style="ellipse;html=1;shape=endState;fillColor=#2d3748;strokeColor=#2d3748;strokeWidth=2;verticalGlyph=;" value="" vertex="1">
+          <mxGeometry height="24" width="24" x="1020" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_start_CHO_XU_LY" edge="1" parent="1" source="start" style="endArrow=block;html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;strokeColor=#4a5568;strokeWidth=1.5;fontSize=10;fontColor=#4a5568;" target="CHO_XU_LY">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_CHO_XU_LY_DANG_GIAO" edge="1" parent="1" source="CHO_XU_LY" style="endArrow=block;html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;strokeColor=#4a5568;strokeWidth=1.5;fontSize=10;fontColor=#4a5568;" target="DANG_GIAO">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_edge_CHO_XU_LY_DANG_GIAO" connectable="0" parent="edge_CHO_XU_LY_DANG_GIAO" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];whiteSpace=wrap;html=1;fontColor=#4a5568;fontSize=10;" value="Admin phê duyệt&lt;br/&gt;thông tin và duyệt đơn" vertex="1">
+          <mxGeometry relative="1" y="-20" as="geometry">
+            <mxPoint y="-20" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge_DANG_GIAO_DA_GIAO" edge="1" parent="1" source="DANG_GIAO" style="endArrow=block;html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;strokeColor=#4a5568;strokeWidth=1.5;fontSize=10;fontColor=#4a5568;" target="DA_GIAO">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_edge_DANG_GIAO_DA_GIAO" connectable="0" parent="edge_DANG_GIAO_DA_GIAO" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];whiteSpace=wrap;html=1;fontColor=#4a5568;fontSize=10;" value="Shipper giao hàng&lt;br/&gt;thành công và thu tiền" vertex="1">
+          <mxGeometry relative="1" y="-20" as="geometry">
+            <mxPoint x="-10" y="-20" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge_DA_GIAO_HOAN_THANH" edge="1" parent="1" source="DA_GIAO" style="endArrow=block;html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;strokeColor=#4a5568;strokeWidth=1.5;fontSize=10;fontColor=#4a5568;" target="HOAN_THANH">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_edge_DA_GIAO_HOAN_THANH" connectable="0" parent="edge_DA_GIAO_HOAN_THANH" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];whiteSpace=wrap;html=1;fontColor=#4a5568;fontSize=10;" value="Khách hàng xác nhận hoặc&lt;br/&gt;gửi đánh giá sản phẩm" vertex="1">
+          <mxGeometry relative="1" y="-20" as="geometry">
+            <mxPoint x="-5" y="-20" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge_HOAN_THANH_end" edge="1" parent="1" source="HOAN_THANH" style="endArrow=block;html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;strokeColor=#4a5568;strokeWidth=1.5;fontSize=10;fontColor=#4a5568;" target="end">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_CHO_XU_LY_HUY_DON" edge="1" parent="1" source="CHO_XU_LY" style="endArrow=block;html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;strokeColor=#4a5568;strokeWidth=1.5;fontSize=10;fontColor=#4a5568;" target="HUY_DON">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="280" y="200" />
+              <mxPoint x="340" y="200" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_edge_CHO_XU_LY_HUY_DON" connectable="0" parent="edge_CHO_XU_LY_HUY_DON" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];whiteSpace=wrap;html=1;fontColor=#4a5568;fontSize=10;" value="Khách hủy /&lt;br/&gt;Admin ép hủy" vertex="1">
+          <mxGeometry relative="1" x="-0.3" y="-10" as="geometry">
+            <mxPoint x="28" y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge_DANG_GIAO_HUY_DON_2" edge="1" parent="1" source="DANG_GIAO" style="endArrow=block;html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;strokeColor=#4a5568;strokeWidth=1.5;fontSize=10;fontColor=#4a5568;" target="HUY_DON">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="480" y="200" />
+              <mxPoint x="340" y="200" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_edge_DANG_GIAO_HUY_DON_2" connectable="0" parent="edge_DANG_GIAO_HUY_DON_2" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];whiteSpace=wrap;html=1;fontColor=#4a5568;fontSize=10;" value="Bùng hàng /&lt;br/&gt;Yêu cầu hủy" vertex="1">
+          <mxGeometry relative="1" x="0.3" y="-10" as="geometry">
+            <mxPoint x="40" y="10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge_HUY_DON_end" edge="1" parent="1" source="HUY_DON" style="endArrow=block;html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;strokeColor=#4a5568;strokeWidth=1.5;fontSize=10;fontColor=#4a5568;" target="end">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="340" y="340" />
+              <mxPoint x="1032" y="340" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

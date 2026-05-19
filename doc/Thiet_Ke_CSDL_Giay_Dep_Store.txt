@@ -1,0 +1,270 @@
+================================================================================
+BÁO CÁO CHI TIẾT THIẾT KẾ CƠ SỞ DỮ LIỆU - HỆ THỐNG GẦY ĐẸP STORE POS (O2O)
+================================================================================
+
+Hệ thống quản lý bán hàng giày dép Store sử dụng hệ quản trị cơ sở dữ liệu quan hệ
+PostgreSQL để lưu trữ toàn bộ thông tin nghiệp vụ đa kênh O2O và tương tác AI. 
+Dưới đây là chi tiết thiết kế các thực thể và cấu trúc các bảng.
+
+--------------------------------------------------------------------------------
+1. DANH SÁCH CÁC THỰC THỂ CHÍNH (TABLES OVERVIEW)
+--------------------------------------------------------------------------------
+1.1. nguoi_dung (Người dùng): Lưu trữ thông tin khách hàng, nhân viên và quản trị viên.
+1.2. dia_chi_giao_hang (Địa chỉ giao hàng): Quản lý sổ địa chỉ của khách hàng trực tuyến.
+1.3. danh_muc (Danh mục sản phẩm): Quản lý cây danh mục giày dép (hỗ trợ đệ quy cha-con).
+1.4. san_pham (Sản phẩm): Lưu trữ thông tin chi tiết của giày dép, đơn giá và số lượng tồn kho.
+1.5. anh_san_pham (Ảnh sản phẩm): Quản lý các hình ảnh liên kết với sản phẩm (chính/phụ).
+1.6. don_hang (Đơn hàng): Lưu trữ thông tin tổng quát về hóa đơn bán tại quầy và online.
+1.7. chi_tiet_don_hang (Chi tiết đơn hàng): Lưu trữ các mặt hàng và số lượng của hóa đơn.
+1.8. thanh_toan (Thanh toán): Quản lý trạng thái và phương thức thanh toán của đơn hàng.
+1.9. gio_hang (Giỏ hàng): Lưu trữ giỏ hàng tạm thời của khách hàng trên kênh online.
+1.10. danh_gia (Đánh giá): Lưu trữ phản hồi và điểm rating sản phẩm của khách hàng.
+1.11. danh_sach_yeu_thich (Yêu thích): Quản lý các sản phẩm khách hàng quan tâm.
+1.12. nhat_ky (Nhật ký hệ thống): Lưu trữ log hoạt động của nhân viên để phục vụ bảo mật.
+1.13. thong_tin_ngan_hang (Thông tin ngân hàng): Quản lý thông tin chuyển khoản thanh toán.
+1.14. phuong_thuc_thanh_toan (Phương thức thanh toán): Cấu hình các cổng thanh toán.
+1.15. ma_giam_gia (Mã giảm giá): Quản lý các chương trình khuyến mãi, voucher.
+1.16. su_dung_ma_giam_gia (Lịch sử sử dụng mã): Ghi nhận lịch sử áp dụng voucher.
+
+--------------------------------------------------------------------------------
+2. THIẾT KẾ CHI TIẾT CÁC BẢNG DỮ LIỆU
+--------------------------------------------------------------------------------
+
+2.1. BẢNG: nguoi_dung
+Mô tả: Quản lý tài khoản đăng nhập và phân quyền hệ thống (Admin, Nhân viên, Khách hàng).
+* Khóa chính: id
+--------------------------------------------------------------------------------
+Tên cột          | Kiểu dữ liệu   | Ràng buộc    | Mô tả
+--------------------------------------------------------------------------------
+id               | Integer        | PK, AutoInc  | Mã định danh duy nhất
+email            | String(255)    | UQ, Not Null | Địa chỉ email đăng nhập
+mat_khau_hash    | String(255)    | Not Null     | Mật khẩu mã hóa Argon2/BCrypt
+ho_ten           | String(255)    | Not Null     | Họ và tên đầy đủ
+so_dien_thoai    | String(20)     | Nullable     | Số điện thoại liên lạc
+dia_chi          | Text           | Nullable     | Địa chỉ thường trú
+vai_tro          | String(20)     | Default khach| Phân quyền: admin / nhan_vien / khach
+anh_dai_dien     | Text           | Nullable     | Đường dẫn ảnh đại diện
+dang_hoat_dong   | Boolean        | Default True | Trạng thái tài khoản
+ngay_tao         | DateTime       | server_default| Ngày giờ khởi tạo
+ngay_cap_nhat    | DateTime       | server_default| Ngày giờ cập nhật cuối
+--------------------------------------------------------------------------------
+
+2.2. BẢNG: dia_chi_giao_hang
+Mô tả: Lưu trữ sổ địa chỉ nhận hàng của khách hàng trên hệ thống online.
+* Khóa chính: id
+* Khóa ngoại: id_nguoi_dung references nguoi_dung(id) ON DELETE CASCADE
+--------------------------------------------------------------------------------
+Tên cột          | Kiểu dữ liệu   | Ràng buộc    | Mô tả
+--------------------------------------------------------------------------------
+id               | Integer        | PK, AutoInc  | Mã định danh địa chỉ
+id_nguoi_dung    | Integer        | FK, Not Null | Liên kết tới tài khoản khách hàng
+ten_nguoi_nhan   | String(255)    | Not Null     | Họ tên người nhận hàng
+so_dien_thoai    | String(20)     | Not Null     | SĐT người nhận hàng
+dia_chi          | Text           | Not Null     | Địa chỉ giao hàng chi tiết
+la_mac_dinh      | Boolean        | Default False| Đánh dấu địa chỉ ưu tiên hàng đầu
+--------------------------------------------------------------------------------
+
+2.3. BẢNG: danh_muc
+Mô tả: Phân nhóm các mặt hàng giày dép (thể thao, công sở, sandal...).
+* Khóa chính: id
+* Khóa ngoại: id_cha references danh_muc(id) (Cấu trúc đệ quy nhóm cha - nhóm con)
+--------------------------------------------------------------------------------
+Tên cột          | Kiểu dữ liệu   | Ràng buộc    | Mô tả
+--------------------------------------------------------------------------------
+id               | Integer        | PK, AutoInc  | Mã định danh danh mục
+ten              | String(255)    | Not Null     | Tên danh mục (Ví dụ: Giày Nam)
+slug             | String(255)    | UQ, Not Null | URL thân thiện phục vụ SEO
+mo_ta            | Text           | Nullable     | Mô tả tóm tắt danh mục
+anh              | Text           | Nullable     | Ảnh minh họa danh mục
+id_cha           | Integer        | FK, Nullable | Liên kết nhóm danh mục cấp trên
+dang_hoat_dong   | Boolean        | Default True | Trạng thái hiển thị danh mục
+ngay_tao         | DateTime       | server_default| Thời gian tạo
+ngay_cap_nhat    | DateTime       | server_default| Thời gian cập nhật
+--------------------------------------------------------------------------------
+
+2.4. BẢNG: san_pham
+Mô tả: Quản lý thông tin chi tiết sản phẩm giày dép và lượng hàng trong kho.
+* Khóa chính: id
+* Khóa ngoại: id_danh_muc references danh_muc(id)
+--------------------------------------------------------------------------------
+Tên cột          | Kiểu dữ liệu   | Ràng buộc    | Mô tả
+--------------------------------------------------------------------------------
+id               | Integer        | PK, AutoInc  | Mã định danh sản phẩm
+ten              | String(255)    | Not Null     | Tên sản phẩm giày dép
+slug             | String(255)    | UQ, Not Null | URL thân thiện của sản phẩm
+mo_ta            | Text           | Nullable     | Mô tả chi tiết sản phẩm
+mo_ta_ngan       | String(500)    | Nullable     | Mô tả ngắn hiển thị ở trang chủ
+gia              | Float          | Not Null     | Đơn giá niêm yết (VND)
+gia_khuyen_mai   | Float          | Nullable     | Giá bán sau khi chiết khấu
+so_luong_ton     | Integer        | Default 0    | Số lượng hàng còn trong kho (Kho)
+ma_sku           | String(100)    | UQ, Nullable | Mã quản lý kho hàng độc lập
+id_danh_muc      | Integer        | FK, Nullable | Liên kết tới danh mục sản phẩm
+thuong_hieu      | String(255)    | Nullable     | Hãng sản xuất (Adidas, Nike...)
+dang_hoat_dong   | Boolean        | Default True | Trạng thái cho phép kinh doanh
+la_noi_bat       | Boolean        | Default False| Đánh dấu sản phẩm hot/bán chạy
+cac_kich_thuoc   | String(255)    | Nullable     | Chuỗi kích cỡ có sẵn (VD: "39,40,41")
+ngay_tao         | DateTime       | server_default| Ngày đăng sản phẩm
+ngay_cap_nhat    | DateTime       | server_default| Ngày cập nhật thông tin gần nhất
+--------------------------------------------------------------------------------
+
+2.5. BẢNG: anh_san_pham
+Mô tả: Lưu trữ danh sách album hình ảnh của mỗi đôi giày.
+* Khóa chính: id
+* Khóa ngoại: id_san_pham references san_pham(id) ON DELETE CASCADE
+--------------------------------------------------------------------------------
+Tên cột          | Kiểu dữ liệu   | Ràng buộc    | Mô tả
+--------------------------------------------------------------------------------
+id               | Integer        | PK, AutoInc  | Mã định danh ảnh
+id_san_pham      | Integer        | FK, Not Null | Liên kết tới sản phẩm
+du_lieu_anh      | Text           | Not Null     | URL ảnh sản phẩm hoặc chuỗi base64
+la_anh_chinh     | Boolean        | Default False| Đánh dấu ảnh đại diện chính
+thu_tu_sap_xep   | Integer        | Default 0    | Thứ tự sắp xếp hiển thị
+--------------------------------------------------------------------------------
+
+2.6. BẢNG: don_hang
+Mô tả: Quản lý thông tin chung của các giao dịch mua hàng bán trực tiếp và trực tuyến.
+* Khóa chính: id
+* Khóa ngoại: id_nguoi_dung references nguoi_dung(id)
+--------------------------------------------------------------------------------
+Tên cột          | Kiểu dữ liệu   | Ràng buộc    | Mô tả
+--------------------------------------------------------------------------------
+id               | Integer        | PK, AutoInc  | Mã định danh đơn hàng
+id_nguoi_dung    | Integer        | FK, Not Null | Khách hàng hoặc tài khoản khách vãng lai
+ma_don_hang      | String(50)     | UQ, Not Null | Mã hóa đơn hiển thị (VD: HD-2026...)
+tong_tien        | Float          | Not Null     | Tổng tiền hàng ban đầu (chưa giảm)
+tien_giam_gia    | Float          | Default 0    | Số tiền chiết khấu do áp mã voucher
+phi_van_chuyen   | Float          | Default 0    | Phí ship (chỉ áp dụng cho online)
+thanh_tien       | Float          | Not Null     | Số tiền thực tế phải thu của khách
+trang_thai       | String(30)     | Default      | Trạng thái: cho_xu_ly, dang_giao, 
+                 |                | 'cho_xu_ly'  | da_giao, hoan_thanh, huy_don
+phuong_thuc_tt   | String(50)     | Nullable     | COD, Chuyển khoản, Tại quầy...
+trang_thai_tt    | String(30)     | Default      | chua_thanh_toan / da_thanh_toan
+                 |                |'chua_thanh_toan'|
+ten_nguoi_nhan   | String(255)    | Nullable     | Họ tên người nhận hàng
+sdt_nguoi_nhan   | String(20)     | Nullable     | Số điện thoại người nhận
+dia_chi_nhan     | Text           | Nullable     | Địa chỉ giao nhận hàng
+ghi_chu          | Text           | Nullable     | Ghi chú đặc biệt cho shipper
+ngay_tao         | DateTime       | server_default| Ngày giờ lập hóa đơn
+ngay_cap_nhat    | DateTime       | server_default| Ngày giờ cập nhật trạng thái đơn
+--------------------------------------------------------------------------------
+
+2.7. BẢNG: chi_tiet_don_hang
+Mô tả: Ghi nhận danh sách sản phẩm, số lượng, kích thước cụ thể trong từng hóa đơn.
+* Khóa chính: id
+* Khóa ngoại:
+  - id_don_hang references don_hang(id) ON DELETE CASCADE
+  - id_san_pham references san_pham(id)
+--------------------------------------------------------------------------------
+Tên cột          | Kiểu dữ liệu   | Ràng buộc    | Mô tả
+--------------------------------------------------------------------------------
+id               | Integer        | PK, AutoInc  | Mã định danh chi tiết hóa đơn
+id_don_hang      | Integer        | FK, Not Null | Liên kết tới đơn hàng tổng quát
+id_san_pham      | Integer        | FK, Not Null | Liên kết tới sản phẩm giày dép
+kich_thuoc       | String(50)     | Nullable     | Size giày khách chọn mua (VD: "40")
+so_luong         | Integer        | Not Null     | Số lượng sản phẩm mua
+don_gia          | Float          | Not Null     | Đơn giá sản phẩm tại thời điểm bán
+thanh_tien       | Float          | Not Null     | Thành tiền = so_luong * don_gia
+--------------------------------------------------------------------------------
+
+2.8. BẢNG: thanh_toan
+Mô tả: Lưu trữ thông tin chi tiết về dòng tiền và mã giao dịch chuyển khoản.
+* Khóa chính: id
+* Khóa ngoại: id_don_hang references don_hang(id) ON DELETE CASCADE (Ràng buộc Unique - 1-1)
+--------------------------------------------------------------------------------
+Tên cột          | Kiểu dữ liệu   | Ràng buộc    | Mô tả
+--------------------------------------------------------------------------------
+id               | Integer        | PK, AutoInc  | Mã định danh giao dịch thanh toán
+id_don_hang      | Integer        | FK, UQ, Not  | Liên kết duy nhất tới hóa đơn
+                 |                | Null         |
+phuong_thuc      | String(50)     | Not Null     | Hình thức: cod / bank / cash_at_store
+so_tien          | Float          | Not Null     | Số tiền khách hàng đã thanh toán
+trang_thai       | String(30)     | Default      | trang_thai: cho_xu_ly / thanh_cong / that_bai
+                 |                | 'cho_xu_ly'  |
+ma_giao_dich     | String(255)    | Nullable     | Mã giao dịch ngân hàng / Ví điện tử
+thoi_diem_tt     | DateTime       | Nullable     | Ngày giờ giao dịch thành công thực tế
+ngay_tao         | DateTime       | server_default| Ngày khởi tạo yêu cầu thanh toán
+--------------------------------------------------------------------------------
+
+2.9. BẢNG: gio_hang
+Mô tả: Quản lý giỏ hàng của từng khách hàng đăng nhập trên ứng dụng web online.
+* Khóa chính: id
+* Khóa ngoại:
+  - id_nguoi_dung references nguoi_dung(id) ON DELETE CASCADE
+  - id_san_pham references san_pham(id) ON DELETE CASCADE
+--------------------------------------------------------------------------------
+Tên cột          | Kiểu dữ liệu   | Ràng buộc    | Mô tả
+--------------------------------------------------------------------------------
+id               | Integer        | PK, AutoInc  | Mã giỏ hàng tạm thời
+id_nguoi_dung    | Integer        | FK, Not Null | Khách hàng sở hữu giỏ hàng
+id_san_pham      | Integer        | FK, Not Null | Sản phẩm giày dép thêm vào giỏ
+kich_thuoc       | String(50)     | Nullable     | Kích cỡ giày đã lựa chọn
+so_luong         | Integer        | Default 1    | Số lượng mua dự kiến
+ngay_tao         | DateTime       | server_default| Ngày thêm vào giỏ
+ngay_cap_nhat    | DateTime       | server_default| Ngày thay đổi số lượng
+--------------------------------------------------------------------------------
+
+2.10. BẢNG: danh_gia
+Mô tả: Lưu phản hồi đánh giá chất lượng giày dép của khách hàng trực tuyến.
+* Khóa chính: id
+* Khóa ngoại:
+  - id_nguoi_dung references nguoi_dung(id)
+  - id_san_pham references san_pham(id) ON DELETE CASCADE
+--------------------------------------------------------------------------------
+Tên cột          | Kiểu dữ liệu   | Ràng buộc    | Mô tả
+--------------------------------------------------------------------------------
+id               | Integer        | PK, AutoInc  | Mã đánh giá
+id_nguoi_dung    | Integer        | FK, Not Null | Khách hàng thực hiện đánh giá
+id_san_pham      | Integer        | FK, Not Null | Đôi giày được đánh giá
+diem_danh_gia    | Integer        | Not Null     | Thang điểm rating (từ 1 đến 5 sao)
+binh_luan        | Text           | Nullable     | Nhận xét chi tiết của khách hàng
+ngay_tao         | DateTime       | server_default| Ngày gửi đánh giá lên hệ thống
+--------------------------------------------------------------------------------
+
+2.11. BẢNG: danh_sach_yeu_thich
+Mô tả: Lưu trữ các sản phẩm giày dép khách hàng đang quan tâm và theo dõi giá.
+* Khóa chính: id
+* Khóa ngoại:
+  - id_nguoi_dung references nguoi_dung(id) ON DELETE CASCADE
+  - id_san_pham references san_pham(id) ON DELETE CASCADE
+* Ràng buộc duy nhất: UQ(id_nguoi_dung, id_san_pham) tránh trùng lặp bản ghi
+--------------------------------------------------------------------------------
+Tên cột          | Kiểu dữ liệu   | Ràng buộc    | Mô tả
+--------------------------------------------------------------------------------
+id               | Integer        | PK, AutoInc  | Mã định danh
+id_nguoi_dung    | Integer        | FK, Not Null | Khách hàng lưu sản phẩm
+id_san_pham      | Integer        | FK, Not Null | Đôi giày được lưu yêu thích
+ngay_tao         | DateTime       | server_default| Thời gian thêm vào danh sách
+--------------------------------------------------------------------------------
+
+2.12. BẢNG: nhat_ky
+Mô tả: Lưu trữ nhật ký thao tác nghiệp vụ hệ thống của Admin và Nhân viên POS tại quầy.
+* Khóa chính: id
+* Khóa ngoại: nguoi_dung_id references nguoi_dung(id)
+--------------------------------------------------------------------------------
+Tên cột          | Kiểu dữ liệu   | Ràng buộc    | Mô tả
+--------------------------------------------------------------------------------
+id               | Integer        | PK, AutoInc  | Mã định danh nhật ký
+nguoi_dung_id    | FK, Nullable   | Nhân viên thao tác thực hiện hành động
+hanh_dong        | String(100)    | Not Null     | Loại hành động: LOGIN, UPDATE_STOCK...
+mo_ta            | Text           | Nullable     | Nội dung chi tiết thao tác
+ip_address       | String(45)     | Nullable     | Địa chỉ IP mạng của thiết bị
+id_don_hang      | Integer        | Nullable     | ID đơn hàng liên quan nếu có
+ngay_tao         | DateTime       | server_default| Thời điểm ghi log hoạt động
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+3. RÀNG BUỘC VÀ MỐI QUAN HỆ TOÀN VẸN (INTEGRITY CONSTRAINTS)
+--------------------------------------------------------------------------------
+3.1. Ràng buộc Khóa chính & Khóa ngoại: 
+   - Tất cả các bảng đều được định nghĩa khóa chính (PK) tự tăng tuần tự (id: Serial/Integer).
+   - Ràng buộc khóa ngoại (FK) chặt chẽ đảm bảo tính nhất quán dữ liệu giữa các bảng như 
+     id_nguoi_dung (dia_chi_giao_hang, don_hang, gio_hang) và id_san_pham (chi_tiet_don_hang, gio_hang).
+3.2. Ràng buộc Duy nhất (Unique Constraints):
+   - email trên bảng nguoi_dung (đăng nhập duy nhất).
+   - slug trên bảng san_pham và danh_muc (phục vụ đường dẫn SEO duy nhất).
+   - ma_don_hang trên bảng don_hang (nhận diện hóa đơn).
+   - Cặp (id_nguoi_dung, id_san_pham) trên bảng danh_sach_yeu_thich.
+3.3. Ràng buộc Xóa (Cascade Actions):
+   - Khi xóa một tài khoản nguoi_dung, toàn bộ dia_chi_giao_hang và gio_hang liên quan sẽ tự động xóa sạch (ON DELETE CASCADE) để tối ưu dung lượng DB.
+   - Khi xóa một san_pham, toàn bộ anh_san_pham và gio_hang liên quan cũng tự động bị xóa đi.
+================================================================================

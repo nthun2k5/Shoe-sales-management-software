@@ -1,0 +1,77 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64)">
+  <diagram id="uc04_flow" name="UC-04: Quản lý nhập kho">
+    <mxGraphModel dx="1768" dy="971" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;fontColor=#005571;" value="&amp;nbsp;UC-04: QUẢN LÝ NHẬP KHO" vertex="1">
+          <mxGeometry height="40" width="680" x="240" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="start" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;" value="Bắt đầu" vertex="1">
+          <mxGeometry height="50" width="120" x="510" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="step1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;" value="1. Admin vào phân hệ &quot;Nhập kho&quot; và tạo phiếu mới&#xa;2. Chọn Nhà cung cấp" vertex="1">
+          <mxGeometry height="60" width="320" x="410" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="step3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;" value="3. Tìm kiếm và chọn cụ thể các biến thể giày&#xa;(Đúng size, đúng màu) cần nhập" vertex="1">
+          <mxGeometry height="60" width="320" x="410" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="step4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;" value="4. Nhập số lượng và đơn giá nhập&#xa;cho từng biến thể" vertex="1">
+          <mxGeometry height="60" width="320" x="410" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="dec1" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;fontSize=13;" value="Số lượng &amp;gt; 0&#xa;&amp;amp; Giá nhập &amp;ge; 0?" vertex="1">
+          <mxGeometry height="90" width="190" x="475" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="exc_input" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;fontStyle=1;" value="Cảnh báo: Lỗi nhập liệu&#xa;(Số lượng &amp;le; 0 hoặc giá nhập âm)&#xa;Yêu cầu sửa lại dữ liệu đầu vào" vertex="1">
+          <mxGeometry height="60" width="280" x="110" y="505" as="geometry" />
+        </mxCell>
+        <mxCell id="step5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;" value="5. Hệ thống tính tổng tiền phiếu nhập" vertex="1">
+          <mxGeometry height="60" width="320" x="410" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="step6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;" value="6. Admin nhấn &quot;Xác nhận nhập kho&quot;" vertex="1">
+          <mxGeometry height="60" width="320" x="410" y="720" as="geometry" />
+        </mxCell>
+        <mxCell id="step7" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;fontStyle=1;" value="7. Hệ thống cập nhật cộng dồn số lượng vào kho&#xa;và lưu lịch sử phiếu nhập" vertex="1">
+          <mxGeometry height="60" width="340" x="400" y="820" as="geometry" />
+        </mxCell>
+        <mxCell id="end" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;" value="Kết thúc" vertex="1">
+          <mxGeometry height="50" width="120" x="510" y="920" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="start" target="step1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="step1" target="step3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="step3" target="step4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="step4" target="dec1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="dec1" style="endArrow=classic;html=1;fontSize=12;fontStyle=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" target="exc_input" value="Lỗi nhập liệu">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="dec1" style="endArrow=classic;html=1;fontSize=12;fontStyle=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="step5" value="Hợp lệ">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="step5" target="step6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="step6" target="step7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="step7" target="end">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="exc_input" style="endArrow=classic;html=1;exitX=0.5;exitY=0;entryX=0;entryY=0.5;strokeColor=#b85450;strokeWidth=1.5;" target="step4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="250" y="420" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

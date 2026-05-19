@@ -1,0 +1,90 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64)">
+  <diagram id="uc02_flow" name="UC-02: Quản lý biến thể sản phẩm">
+    <mxGraphModel dx="1885" dy="1036" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;fontColor=#005571;" value="UC-02: QUẢN LÝ BIẾN THỂ SẢN PHẨM" vertex="1">
+          <mxGeometry height="40" width="680" x="240" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="start" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;" value="Bắt đầu" vertex="1">
+          <mxGeometry height="50" width="120" x="510" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="step1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;" value="1. Admin truy cập danh sách sản phẩm,&#xa;chọn sản phẩm gốc và nhấn &quot;Thêm biến thể&quot;" vertex="1">
+          <mxGeometry height="60" width="280" x="430" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="step2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;" value="2. Hệ thống hiển thị form nhập liệu&#xa;3. Admin nhập thông số: Size, Màu sắc,&#xa;Giá nhập, Giá bán và nhấn &quot;Lưu&quot;" vertex="1">
+          <mxGeometry height="70" width="280" x="430" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="step5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;" value="5. Hệ thống xác thực dữ liệu đầu vào (Pydantic)" vertex="1">
+          <mxGeometry height="60" width="300" x="420" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="dec1" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;fontSize=13;" value="Dữ liệu đầu vào&#xa;hợp lệ (Pydantic)?" vertex="1">
+          <mxGeometry height="90" width="180" x="480" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="exc_invalid" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;fontStyle=1;" value="Cảnh báo: Lỗi nhập liệu (Pydantic)&#xa;Yêu cầu kiểm tra lại dữ liệu" vertex="1">
+          <mxGeometry height="60" width="260" x="780" y="515" as="geometry" />
+        </mxCell>
+        <mxCell id="dec2" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;fontSize=13;" value="Kiểm tra&#xa;trùng lặp biến thể&#xa;(Size + Màu)?" vertex="1">
+          <mxGeometry height="100" width="180" x="480" y="630" as="geometry" />
+        </mxCell>
+        <mxCell id="exc_dup" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;fontStyle=1;" value="Cảnh báo lỗi Unique Constraint:&#xa;&quot;Biến thể này đã tồn tại&quot;" vertex="1">
+          <mxGeometry height="60" width="260" x="120" y="650" as="geometry" />
+        </mxCell>
+        <mxCell id="save_db" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;fontStyle=1;" value="Lưu thông tin vào bảng Product_Variants&#xa;trong Cơ sở dữ liệu" vertex="1">
+          <mxGeometry height="60" width="280" x="430" y="770" as="geometry" />
+        </mxCell>
+        <mxCell id="step6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;fontStyle=1;" value="6. Thông báo thành công và cập nhật lại&#xa;danh sách hiển thị" vertex="1">
+          <mxGeometry height="60" width="280" x="430" y="870" as="geometry" />
+        </mxCell>
+        <mxCell id="end" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;" value="Kết thúc" vertex="1">
+          <mxGeometry height="50" width="120" x="510" y="970" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="start" target="step1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="step1" target="step2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="step2" target="step5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="step5" target="dec1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="dec1" style="endArrow=classic;html=1;fontSize=12;fontStyle=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" target="exc_invalid" value="Không hợp lệ">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="dec1" style="endArrow=classic;html=1;fontSize=12;fontStyle=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="dec2" value="Hợp lệ">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="dec2" style="endArrow=classic;html=1;fontSize=12;fontStyle=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" target="exc_dup" value="Đã tồn tại (Trùng)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="dec2" style="endArrow=classic;html=1;fontSize=12;fontStyle=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="save_db" value="Chưa tồn tại">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="save_db" target="step6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="step6" target="end">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="exc_invalid" style="endArrow=classic;html=1;exitX=0.5;exitY=0;entryX=1;entryY=0.5;strokeColor=#b85450;strokeWidth=1.5;entryDx=0;entryDy=0;" target="step2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="910" y="325" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="1" source="exc_dup" style="endArrow=classic;html=1;exitX=0.5;exitY=0;entryX=0;entryY=0.75;strokeColor=#b85450;strokeWidth=1.5;" target="step2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="250" y="342" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,102 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64)">
+  <diagram id="uc03_flow" name="UC-03: Lập hóa đơn bán hàng">
+    <mxGraphModel dx="2020" dy="1110" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;fontColor=#005571;" value="UC-03: LẬP HÓA ĐƠN BÁN HÀNG" vertex="1">
+          <mxGeometry height="40" width="680" x="240" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="start" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;" value="Bắt đầu" vertex="1">
+          <mxGeometry height="50" width="120" x="510" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="step1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;" value="1. Nhân viên nhập SĐT để hệ thống&#xa;tải thông tin khách hàng" vertex="1">
+          <mxGeometry height="60" width="280" x="430" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="step2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;" value="2. Nhân viên quét mã vạch / gõ tên giày&#xa;3. Hệ thống hiển thị các biến thể còn hàng&#xa;(Size, Màu, Giá)" vertex="1">
+          <mxGeometry height="70" width="280" x="430" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="step4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;" value="4. Nhân viên chọn biến thể và&#xa;điều chỉnh số lượng mua" vertex="1">
+          <mxGeometry height="60" width="280" x="430" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="dec1" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;fontSize=13;" value="Số lượng mua&#xa;&amp;le; Số lượng tồn kho?" vertex="1">
+          <mxGeometry height="90" width="190" x="475" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="exc_stock" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;fontStyle=1;" value="Cảnh báo đỏ: &quot;Số lượng tồn kho không đủ&#xa;để đáp ứng&quot; (Không cho thêm vào HĐ)" vertex="1">
+          <mxGeometry height="60" width="280" x="110" y="465" as="geometry" />
+        </mxCell>
+        <mxCell id="step5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;" value="5. Nhân viên nhập mã giảm giá (nếu có)" vertex="1">
+          <mxGeometry height="60" width="280" x="430" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="dec2" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;fontSize=13;" value="Mã giảm giá&#xa;hợp lệ &amp;amp; còn hạn?" vertex="1">
+          <mxGeometry height="90" width="180" x="480" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="exc_coupon" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;fontStyle=1;" value="Cảnh báo: &quot;Mã giảm giá không hợp lệ&#xa;hoặc đã hết hạn&quot;" vertex="1">
+          <mxGeometry height="60" width="280" x="110" y="675" as="geometry" />
+        </mxCell>
+        <mxCell id="step6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;" value="6. Hệ thống tính tổng tiền, thuế, phí&#xa;và thành tiền cuối cùng" vertex="1">
+          <mxGeometry height="60" width="280" x="430" y="780" as="geometry" />
+        </mxCell>
+        <mxCell id="step7" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;" value="7. Nhân viên nhận tiền, xác nhận thanh toán&#xa;và nhấn &quot;Hoàn tất&quot;" vertex="1">
+          <mxGeometry height="60" width="280" x="430" y="870" as="geometry" />
+        </mxCell>
+        <mxCell id="step8" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;fontStyle=1;" value="8. Hệ thống lưu hóa đơn, thực hiện transaction&#xa;trừ số lượng tồn của biến thể trong kho" vertex="1">
+          <mxGeometry height="60" width="320" x="410" y="960" as="geometry" />
+        </mxCell>
+        <mxCell id="end" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;" value="Kết thúc" vertex="1">
+          <mxGeometry height="50" width="120" x="510" y="1050" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="start" target="step1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="step1" target="step2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="step2" target="step4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="step4" target="dec1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="dec1" style="endArrow=classic;html=1;fontSize=12;fontStyle=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" target="exc_stock" value="Không đủ tồn">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="dec1" style="endArrow=classic;html=1;fontSize=12;fontStyle=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="step5" value="Đủ tồn kho">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="step5" target="dec2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="dec2" style="endArrow=classic;html=1;fontSize=12;fontStyle=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" target="exc_coupon" value="Không hợp lệ">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="dec2" style="endArrow=classic;html=1;fontSize=12;fontStyle=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="step6" value="Hợp lệ / Không nhập">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="step6" target="step7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e13" edge="1" parent="1" source="step7" target="step8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e14" edge="1" parent="1" source="step8" target="end">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="exc_stock" style="endArrow=classic;html=1;exitX=0.5;exitY=0;entryX=0;entryY=0.5;strokeColor=#b85450;strokeWidth=1.5;" target="step4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="250" y="390" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="1" source="exc_coupon" style="endArrow=classic;html=1;exitX=0.5;exitY=0;entryX=0;entryY=0.5;strokeColor=#b85450;strokeWidth=1.5;" target="step5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="250" y="600" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

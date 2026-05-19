@@ -1,0 +1,92 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64)">
+  <diagram id="uc05_flow" name="UC-05: Xem báo cáo doanh thu">
+    <mxGraphModel dx="1664" dy="914" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;fontColor=#005571;" value="&amp;nbsp;UC-05: XEM BÁO CÁO &amp;amp; THỐNG KÊ DOANH THU" vertex="1">
+          <mxGeometry height="40" width="760" x="200" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="start" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;" value="Bắt đầu" vertex="1">
+          <mxGeometry height="50" width="120" x="510" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="step1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;" value="1. Admin truy cập màn hình Dashboard&#xa;2. Chọn mốc thời gian cần xem (Ngày/Tuần/Tháng)" vertex="1">
+          <mxGeometry height="60" width="340" x="400" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="step3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;" value="3. Hệ thống truy vấn CSDL, tính toán các chỉ số:&#xa;Tổng doanh thu, Số đơn hàng, Sản phẩm bán chạy" vertex="1">
+          <mxGeometry height="60" width="340" x="400" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="dec1" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;fontSize=13;" value="Có dữ liệu giao dịch&#xa;trong khoảng thời gian?" vertex="1">
+          <mxGeometry height="90" width="190" x="475" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="exc_nodata" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;fontStyle=1;" value="Thông báo: &quot;Chưa có dữ liệu giao dịch&#xa;trong thời gian này&quot; (Biểu đồ rỗng)" vertex="1">
+          <mxGeometry height="60" width="280" x="110" y="405" as="geometry" />
+        </mxCell>
+        <mxCell id="step4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;" value="4. Giao diện (Vue 3) render biểu đồ trực quan&#xa;(Chart.js) dựa trên dữ liệu trả về" vertex="1">
+          <mxGeometry height="60" width="340" x="400" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="dec2" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;fontSize=13;" value="Admin có nhu cầu&#xa;Xuất Excel?" vertex="1">
+          <mxGeometry height="90" width="180" x="480" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="step5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;fontStyle=1;" value="5. Admin nhấn nút &quot;Xuất Excel&quot;&#xa;6. Hệ thống đóng gói dữ liệu và tải file .xlsx&#xa;xuống máy tính" vertex="1">
+          <mxGeometry height="70" width="300" x="680" y="730" as="geometry" />
+        </mxCell>
+        <mxCell id="step_view" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;" value="Xem trực tiếp trên màn hình Dashboard" vertex="1">
+          <mxGeometry height="60" width="280" x="350" y="735" as="geometry" />
+        </mxCell>
+        <mxCell id="end" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;" value="Kết thúc" vertex="1">
+          <mxGeometry height="50" width="120" x="510" y="860" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="start" target="step1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="step1" target="step3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="step3" target="dec1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="dec1" style="endArrow=classic;html=1;fontSize=12;fontStyle=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" target="exc_nodata" value="Không có dữ liệu">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="dec1" style="endArrow=classic;html=1;fontSize=12;fontStyle=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="step4" value="Có dữ liệu">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="step4" target="dec2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="dec2" style="endArrow=classic;html=1;fontSize=12;fontStyle=1;exitX=0;exitY=0.5;entryX=0.5;entryY=0;" target="step_view" value="Không (Xem trực tiếp)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="490" y="665" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="dec2" style="endArrow=classic;html=1;fontSize=12;fontStyle=1;exitX=1;exitY=0.5;entryX=0.5;entryY=0;" target="step5" value="Có (Xuất Excel)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="830" y="665" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="exc_nodata" target="end">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="250" y="885" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="step_view" target="end">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="step5" target="end">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="830" y="885" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
